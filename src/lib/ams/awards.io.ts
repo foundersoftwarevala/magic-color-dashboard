@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Award Center — CSV/JSON import/export helpers.
 // Pure browser code; works against the in-memory awards.api.ts store.
 

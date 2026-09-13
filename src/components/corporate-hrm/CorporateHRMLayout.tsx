@@ -75,7 +75,7 @@ export default function CorporateHRMLayout({
   const filteredNavItems = navItems.filter(item => item.roles.includes(userRole));
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="ams-light min-h-screen bg-slate-50 flex">
       {/* Sidebar */}
       <aside className={cn(
         "bg-slate-900 text-white flex flex-col transition-all duration-300",

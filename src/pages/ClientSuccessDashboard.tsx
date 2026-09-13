@@ -30,7 +30,7 @@ const ClientSuccessDashboard = () => {
   const userName = user?.email?.split('@')[0] || 'Manager';
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowWelcome(false), 3000);
+    const timer = setTimeout(() => setShowWelcome(false), 600);
     return () => clearTimeout(timer);
   }, []);
 
@@ -66,7 +66,7 @@ const ClientSuccessDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30 flex">
+    <div className="ams-light min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30 flex">
       {/* Welcome Animation Overlay */}
       <AnimatePresence>
         {showWelcome && (

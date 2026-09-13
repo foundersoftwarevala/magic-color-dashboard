@@ -1,9 +1,9 @@
-// @ts-nocheck
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Trophy, Volume2, Sparkles } from "lucide-react";
 import { ROLES } from "@/lib/ams/roles";
 import { playUnlock, type UnlockPreset } from "@/lib/ams/trophy-sounds";
+import { MuseumCase, SVMicroMark, SVSeal, svCollectionNumber } from "@/components/ams/brand/SVMark";
 
 import affiliate from "@/assets/trophies/affiliate.png";
 import author from "@/assets/trophies/author.png";
@@ -16,10 +16,14 @@ import seo from "@/assets/trophies/seo.png";
 import support from "@/assets/trophies/support.png";
 import user from "@/assets/trophies/user.png";
 import vendor from "@/assets/trophies/vendor.png";
+import manager from "@/assets/trophy-stages/manager-01.png";
+import administrator from "@/assets/trophy-stages/administrator-01.png";
+import founder from "@/assets/trophy-stages/founder-01.png";
+import operator from "@/assets/trophy-stages/operator-01.png";
 
 const TROPHY: Record<string, string> = {
   developer, reseller, franchise, author, vendor, affiliate,
-  influencer, creator, seo, support, user,
+  influencer, creator, seo, support, user, manager, administrator, founder, operator,
 };
 
 // Museum-quality theme per role — no two identities repeat.
@@ -145,6 +149,17 @@ function TrophyDisplayCase({ role }: { role: (typeof ROLES)[number] }) {
           className={`h-56 w-56 object-contain trophy-float ${pulse ? "trophy-unlock" : ""}`}
           style={{ filter: `drop-shadow(0 12px 30px ${role.accent}88)` }}
         />
+        <MuseumCase accent={role.accent} />
+        <div className="absolute left-3 top-3 z-10 flex items-center gap-2">
+          <SVSeal accent={role.accent} size={22} />
+          <SVMicroMark accent={role.accent} />
+        </div>
+        <div
+          className="absolute bottom-2 right-3 z-10 font-mono uppercase"
+          style={{ fontSize: 9, letterSpacing: "0.22em", color: `${role.accent}aa` }}
+        >
+          {svCollectionNumber(`${role.slug}-${tier.key}`, role.passportPrefix)}
+        </div>
       </div>
 
       {/* engraved nameplate */}

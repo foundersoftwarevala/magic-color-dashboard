@@ -24,6 +24,7 @@ import { Route as AuthenticatedVerificationVaultRouteImport } from './routes/_au
 import { Route as AuthenticatedVendorProgressionRouteImport } from './routes/_authenticated/vendor-progression'
 import { Route as AuthenticatedTrustSealVaultRouteImport } from './routes/_authenticated/trust-seal-vault'
 import { Route as AuthenticatedTrophyVaultRouteImport } from './routes/_authenticated/trophy-vault'
+import { Route as AuthenticatedTrophyStagesRouteImport } from './routes/_authenticated/trophy-stages'
 import { Route as AuthenticatedTrophyGalleryRouteImport } from './routes/_authenticated/trophy-gallery'
 import { Route as AuthenticatedTrophiesRouteImport } from './routes/_authenticated/trophies'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
@@ -70,10 +71,14 @@ import { Route as AuthenticatedAchievementsRouteImport } from './routes/_authent
 import { Route as AuthenticatedAchievementVaultRouteImport } from './routes/_authenticated/achievement-vault'
 import { Route as AuthenticatedRoleShowcaseIndexRouteImport } from './routes/_authenticated/role-showcase.index'
 import { Route as AuthenticatedRoleManagerIndexRouteImport } from './routes/_authenticated/role-manager.index'
+import { Route as AuthenticatedMuseumIndexRouteImport } from './routes/_authenticated/museum.index'
+import { Route as AuthenticatedCollectionIndexRouteImport } from './routes/_authenticated/collection.index'
 import { Route as AuthenticatedAwardsIndexRouteImport } from './routes/_authenticated/awards.index'
 import { Route as AuthenticatedAmsIndexRouteImport } from './routes/_authenticated/ams.index'
 import { Route as AuthenticatedRoleShowcaseSlugRouteImport } from './routes/_authenticated/role-showcase.$slug'
 import { Route as AuthenticatedRoleManagerSlugRouteImport } from './routes/_authenticated/role-manager.$slug'
+import { Route as AuthenticatedMuseumShowcaseRouteImport } from './routes/_authenticated/museum.$showcase'
+import { Route as AuthenticatedCollectionTypeRouteImport } from './routes/_authenticated/collection.$type'
 import { Route as AuthenticatedAwardsNewRouteImport } from './routes/_authenticated/awards.new'
 import { Route as AuthenticatedAwardsEffectsRouteImport } from './routes/_authenticated/awards.effects'
 import { Route as AuthenticatedAwardsCategoriesRouteImport } from './routes/_authenticated/awards.categories'
@@ -169,6 +174,12 @@ const AuthenticatedTrophyVaultRoute =
   AuthenticatedTrophyVaultRouteImport.update({
     id: '/trophy-vault',
     path: '/trophy-vault',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedTrophyStagesRoute =
+  AuthenticatedTrophyStagesRouteImport.update({
+    id: '/trophy-stages',
+    path: '/trophy-stages',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedTrophyGalleryRoute =
@@ -426,6 +437,18 @@ const AuthenticatedRoleManagerIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedRoleManagerRoute,
   } as any)
+const AuthenticatedMuseumIndexRoute =
+  AuthenticatedMuseumIndexRouteImport.update({
+    id: '/museum/',
+    path: '/museum/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCollectionIndexRoute =
+  AuthenticatedCollectionIndexRouteImport.update({
+    id: '/collection/',
+    path: '/collection/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAwardsIndexRoute =
   AuthenticatedAwardsIndexRouteImport.update({
     id: '/awards/',
@@ -448,6 +471,18 @@ const AuthenticatedRoleManagerSlugRoute =
     id: '/$slug',
     path: '/$slug',
     getParentRoute: () => AuthenticatedRoleManagerRoute,
+  } as any)
+const AuthenticatedMuseumShowcaseRoute =
+  AuthenticatedMuseumShowcaseRouteImport.update({
+    id: '/museum/$showcase',
+    path: '/museum/$showcase',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedCollectionTypeRoute =
+  AuthenticatedCollectionTypeRouteImport.update({
+    id: '/collection/$type',
+    path: '/collection/$type',
+    getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedAwardsNewRoute = AuthenticatedAwardsNewRouteImport.update({
   id: '/awards/new',
@@ -597,6 +632,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
   '/trophies': typeof AuthenticatedTrophiesRoute
   '/trophy-gallery': typeof AuthenticatedTrophyGalleryRoute
+  '/trophy-stages': typeof AuthenticatedTrophyStagesRoute
   '/trophy-vault': typeof AuthenticatedTrophyVaultRoute
   '/trust-seal-vault': typeof AuthenticatedTrustSealVaultRoute
   '/vendor-progression': typeof AuthenticatedVendorProgressionRoute
@@ -614,10 +650,14 @@ export interface FileRoutesByFullPath {
   '/awards/categories': typeof AuthenticatedAwardsCategoriesRoute
   '/awards/effects': typeof AuthenticatedAwardsEffectsRoute
   '/awards/new': typeof AuthenticatedAwardsNewRoute
+  '/collection/$type': typeof AuthenticatedCollectionTypeRoute
+  '/museum/$showcase': typeof AuthenticatedMuseumShowcaseRoute
   '/role-manager/$slug': typeof AuthenticatedRoleManagerSlugRoute
   '/role-showcase/$slug': typeof AuthenticatedRoleShowcaseSlugRoute
   '/ams/': typeof AuthenticatedAmsIndexRoute
   '/awards/': typeof AuthenticatedAwardsIndexRoute
+  '/collection/': typeof AuthenticatedCollectionIndexRoute
+  '/museum/': typeof AuthenticatedMuseumIndexRoute
   '/role-manager/': typeof AuthenticatedRoleManagerIndexRoute
   '/role-showcase/': typeof AuthenticatedRoleShowcaseIndexRoute
   '/awards/$id/edit': typeof AuthenticatedAwardsIdEditRoute
@@ -679,6 +719,7 @@ export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
   '/trophies': typeof AuthenticatedTrophiesRoute
   '/trophy-gallery': typeof AuthenticatedTrophyGalleryRoute
+  '/trophy-stages': typeof AuthenticatedTrophyStagesRoute
   '/trophy-vault': typeof AuthenticatedTrophyVaultRoute
   '/trust-seal-vault': typeof AuthenticatedTrustSealVaultRoute
   '/vendor-progression': typeof AuthenticatedVendorProgressionRoute
@@ -696,10 +737,14 @@ export interface FileRoutesByTo {
   '/awards/categories': typeof AuthenticatedAwardsCategoriesRoute
   '/awards/effects': typeof AuthenticatedAwardsEffectsRoute
   '/awards/new': typeof AuthenticatedAwardsNewRoute
+  '/collection/$type': typeof AuthenticatedCollectionTypeRoute
+  '/museum/$showcase': typeof AuthenticatedMuseumShowcaseRoute
   '/role-manager/$slug': typeof AuthenticatedRoleManagerSlugRoute
   '/role-showcase/$slug': typeof AuthenticatedRoleShowcaseSlugRoute
   '/ams': typeof AuthenticatedAmsIndexRoute
   '/awards': typeof AuthenticatedAwardsIndexRoute
+  '/collection': typeof AuthenticatedCollectionIndexRoute
+  '/museum': typeof AuthenticatedMuseumIndexRoute
   '/role-manager': typeof AuthenticatedRoleManagerIndexRoute
   '/role-showcase': typeof AuthenticatedRoleShowcaseIndexRoute
   '/awards/$id/edit': typeof AuthenticatedAwardsIdEditRoute
@@ -764,6 +809,7 @@ export interface FileRoutesById {
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/trophies': typeof AuthenticatedTrophiesRoute
   '/_authenticated/trophy-gallery': typeof AuthenticatedTrophyGalleryRoute
+  '/_authenticated/trophy-stages': typeof AuthenticatedTrophyStagesRoute
   '/_authenticated/trophy-vault': typeof AuthenticatedTrophyVaultRoute
   '/_authenticated/trust-seal-vault': typeof AuthenticatedTrustSealVaultRoute
   '/_authenticated/vendor-progression': typeof AuthenticatedVendorProgressionRoute
@@ -781,10 +827,14 @@ export interface FileRoutesById {
   '/_authenticated/awards/categories': typeof AuthenticatedAwardsCategoriesRoute
   '/_authenticated/awards/effects': typeof AuthenticatedAwardsEffectsRoute
   '/_authenticated/awards/new': typeof AuthenticatedAwardsNewRoute
+  '/_authenticated/collection/$type': typeof AuthenticatedCollectionTypeRoute
+  '/_authenticated/museum/$showcase': typeof AuthenticatedMuseumShowcaseRoute
   '/_authenticated/role-manager/$slug': typeof AuthenticatedRoleManagerSlugRoute
   '/_authenticated/role-showcase/$slug': typeof AuthenticatedRoleShowcaseSlugRoute
   '/_authenticated/ams/': typeof AuthenticatedAmsIndexRoute
   '/_authenticated/awards/': typeof AuthenticatedAwardsIndexRoute
+  '/_authenticated/collection/': typeof AuthenticatedCollectionIndexRoute
+  '/_authenticated/museum/': typeof AuthenticatedMuseumIndexRoute
   '/_authenticated/role-manager/': typeof AuthenticatedRoleManagerIndexRoute
   '/_authenticated/role-showcase/': typeof AuthenticatedRoleShowcaseIndexRoute
   '/_authenticated/awards/$id/edit': typeof AuthenticatedAwardsIdEditRoute
@@ -849,6 +899,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/trophies'
     | '/trophy-gallery'
+    | '/trophy-stages'
     | '/trophy-vault'
     | '/trust-seal-vault'
     | '/vendor-progression'
@@ -866,10 +917,14 @@ export interface FileRouteTypes {
     | '/awards/categories'
     | '/awards/effects'
     | '/awards/new'
+    | '/collection/$type'
+    | '/museum/$showcase'
     | '/role-manager/$slug'
     | '/role-showcase/$slug'
     | '/ams/'
     | '/awards/'
+    | '/collection/'
+    | '/museum/'
     | '/role-manager/'
     | '/role-showcase/'
     | '/awards/$id/edit'
@@ -931,6 +986,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/trophies'
     | '/trophy-gallery'
+    | '/trophy-stages'
     | '/trophy-vault'
     | '/trust-seal-vault'
     | '/vendor-progression'
@@ -948,10 +1004,14 @@ export interface FileRouteTypes {
     | '/awards/categories'
     | '/awards/effects'
     | '/awards/new'
+    | '/collection/$type'
+    | '/museum/$showcase'
     | '/role-manager/$slug'
     | '/role-showcase/$slug'
     | '/ams'
     | '/awards'
+    | '/collection'
+    | '/museum'
     | '/role-manager'
     | '/role-showcase'
     | '/awards/$id/edit'
@@ -1015,6 +1075,7 @@ export interface FileRouteTypes {
     | '/_authenticated/settings'
     | '/_authenticated/trophies'
     | '/_authenticated/trophy-gallery'
+    | '/_authenticated/trophy-stages'
     | '/_authenticated/trophy-vault'
     | '/_authenticated/trust-seal-vault'
     | '/_authenticated/vendor-progression'
@@ -1032,10 +1093,14 @@ export interface FileRouteTypes {
     | '/_authenticated/awards/categories'
     | '/_authenticated/awards/effects'
     | '/_authenticated/awards/new'
+    | '/_authenticated/collection/$type'
+    | '/_authenticated/museum/$showcase'
     | '/_authenticated/role-manager/$slug'
     | '/_authenticated/role-showcase/$slug'
     | '/_authenticated/ams/'
     | '/_authenticated/awards/'
+    | '/_authenticated/collection/'
+    | '/_authenticated/museum/'
     | '/_authenticated/role-manager/'
     | '/_authenticated/role-showcase/'
     | '/_authenticated/awards/$id/edit'
@@ -1167,6 +1232,13 @@ declare module '@tanstack/react-router' {
       path: '/trophy-vault'
       fullPath: '/trophy-vault'
       preLoaderRoute: typeof AuthenticatedTrophyVaultRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/trophy-stages': {
+      id: '/_authenticated/trophy-stages'
+      path: '/trophy-stages'
+      fullPath: '/trophy-stages'
+      preLoaderRoute: typeof AuthenticatedTrophyStagesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/trophy-gallery': {
@@ -1491,6 +1563,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedRoleManagerIndexRouteImport
       parentRoute: typeof AuthenticatedRoleManagerRoute
     }
+    '/_authenticated/museum/': {
+      id: '/_authenticated/museum/'
+      path: '/museum'
+      fullPath: '/museum/'
+      preLoaderRoute: typeof AuthenticatedMuseumIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/collection/': {
+      id: '/_authenticated/collection/'
+      path: '/collection'
+      fullPath: '/collection/'
+      preLoaderRoute: typeof AuthenticatedCollectionIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/awards/': {
       id: '/_authenticated/awards/'
       path: '/awards'
@@ -1518,6 +1604,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/role-manager/$slug'
       preLoaderRoute: typeof AuthenticatedRoleManagerSlugRouteImport
       parentRoute: typeof AuthenticatedRoleManagerRoute
+    }
+    '/_authenticated/museum/$showcase': {
+      id: '/_authenticated/museum/$showcase'
+      path: '/museum/$showcase'
+      fullPath: '/museum/$showcase'
+      preLoaderRoute: typeof AuthenticatedMuseumShowcaseRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/collection/$type': {
+      id: '/_authenticated/collection/$type'
+      path: '/collection/$type'
+      fullPath: '/collection/$type'
+      preLoaderRoute: typeof AuthenticatedCollectionTypeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/awards/new': {
       id: '/_authenticated/awards/new'
@@ -1715,6 +1815,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedTrophiesRoute: typeof AuthenticatedTrophiesRoute
   AuthenticatedTrophyGalleryRoute: typeof AuthenticatedTrophyGalleryRoute
+  AuthenticatedTrophyStagesRoute: typeof AuthenticatedTrophyStagesRoute
   AuthenticatedTrophyVaultRoute: typeof AuthenticatedTrophyVaultRoute
   AuthenticatedTrustSealVaultRoute: typeof AuthenticatedTrustSealVaultRoute
   AuthenticatedVendorProgressionRoute: typeof AuthenticatedVendorProgressionRoute
@@ -1728,9 +1829,13 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAwardsCategoriesRoute: typeof AuthenticatedAwardsCategoriesRoute
   AuthenticatedAwardsEffectsRoute: typeof AuthenticatedAwardsEffectsRoute
   AuthenticatedAwardsNewRoute: typeof AuthenticatedAwardsNewRoute
+  AuthenticatedCollectionTypeRoute: typeof AuthenticatedCollectionTypeRoute
+  AuthenticatedMuseumShowcaseRoute: typeof AuthenticatedMuseumShowcaseRoute
   AuthenticatedRoleShowcaseSlugRoute: typeof AuthenticatedRoleShowcaseSlugRoute
   AuthenticatedAmsIndexRoute: typeof AuthenticatedAmsIndexRoute
   AuthenticatedAwardsIndexRoute: typeof AuthenticatedAwardsIndexRoute
+  AuthenticatedCollectionIndexRoute: typeof AuthenticatedCollectionIndexRoute
+  AuthenticatedMuseumIndexRoute: typeof AuthenticatedMuseumIndexRoute
   AuthenticatedRoleShowcaseIndexRoute: typeof AuthenticatedRoleShowcaseIndexRoute
   AuthenticatedAwardsLibrariesAchievementsRoute: typeof AuthenticatedAwardsLibrariesAchievementsRoute
   AuthenticatedAwardsLibrariesBadgesRoute: typeof AuthenticatedAwardsLibrariesBadgesRoute
@@ -1790,6 +1895,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedTrophiesRoute: AuthenticatedTrophiesRoute,
   AuthenticatedTrophyGalleryRoute: AuthenticatedTrophyGalleryRoute,
+  AuthenticatedTrophyStagesRoute: AuthenticatedTrophyStagesRoute,
   AuthenticatedTrophyVaultRoute: AuthenticatedTrophyVaultRoute,
   AuthenticatedTrustSealVaultRoute: AuthenticatedTrustSealVaultRoute,
   AuthenticatedVendorProgressionRoute: AuthenticatedVendorProgressionRoute,
@@ -1803,9 +1909,13 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAwardsCategoriesRoute: AuthenticatedAwardsCategoriesRoute,
   AuthenticatedAwardsEffectsRoute: AuthenticatedAwardsEffectsRoute,
   AuthenticatedAwardsNewRoute: AuthenticatedAwardsNewRoute,
+  AuthenticatedCollectionTypeRoute: AuthenticatedCollectionTypeRoute,
+  AuthenticatedMuseumShowcaseRoute: AuthenticatedMuseumShowcaseRoute,
   AuthenticatedRoleShowcaseSlugRoute: AuthenticatedRoleShowcaseSlugRoute,
   AuthenticatedAmsIndexRoute: AuthenticatedAmsIndexRoute,
   AuthenticatedAwardsIndexRoute: AuthenticatedAwardsIndexRoute,
+  AuthenticatedCollectionIndexRoute: AuthenticatedCollectionIndexRoute,
+  AuthenticatedMuseumIndexRoute: AuthenticatedMuseumIndexRoute,
   AuthenticatedRoleShowcaseIndexRoute: AuthenticatedRoleShowcaseIndexRoute,
   AuthenticatedAwardsLibrariesAchievementsRoute:
     AuthenticatedAwardsLibrariesAchievementsRoute,

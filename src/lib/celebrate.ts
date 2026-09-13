@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Cinematic WebAudio celebration sounds — no asset files needed.
 // Premium award orchestra, crystal chimes, fanfares, crown stings.
 

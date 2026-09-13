@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CreditCard } from "lucide-react";

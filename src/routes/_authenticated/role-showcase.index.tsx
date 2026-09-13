@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ROLES } from "@/lib/ams/roles";
 import { ROLE_THEMES } from "@/lib/ams/role-themes";

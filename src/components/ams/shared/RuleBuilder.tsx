@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,7 +40,7 @@ export function RuleBuilder({
             placeholder="value"
             onChange={(e) => update(rows.map((r) => r.id === row.id ? { ...r, value: e.target.value } : r))}
           />
-          <Button variant="ghost" size="icon" onClick={() => update(rows.filter((r) => r.id !== row.id))}>
+          <Button variant="ghost" size="icon" title="Remove rule" aria-label="Remove rule" onClick={() => update(rows.filter((r) => r.id !== row.id))}>
             <Trash2 className="h-4 w-4 text-destructive" />
           </Button>
           {i < rows.length - 1 && (

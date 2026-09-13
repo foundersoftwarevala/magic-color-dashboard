@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import QRCode from "qrcode";
 import { useEffect, useState } from "react";
-import { ShieldCheck, ShieldAlert, BookMarked, Stamp, CalendarClock, Landmark } from "lucide-react";
+import { ShieldCheck, ShieldAlert, BookMarked, Stamp, CalendarClock, Landmark, ScrollText, Hash } from "lucide-react";
 import { findPassportByCode, passportVerifyUrl } from "@/lib/ams/passport-id";
-import { ROLE_PASSPORT } from "@/lib/ams/role-assets";
+import { certificateVerifyUrl, findCertificateByCode, type CertificateIdentity } from "@/lib/ams/certificate-id";
+import { ROLE_CERTIFICATE, ROLE_PASSPORT } from "@/lib/ams/role-assets";
+import type { RoleDNA } from "@/lib/ams/roles";
 import { Collectible3D } from "@/components/ams/collectible/Collectible3D";
 import { CelebrationProvider } from "@/components/ams/effects/Celebration";
 
@@ -32,6 +34,11 @@ function VerifyPageRoot() {
 function VerifyPage() {
   const { code } = Route.useParams();
   const match = findPassportByCode(code);
+  const certMatch = match ? null : findCertificateByCode(code);
+
+  if (certMatch) {
+    return <CertificateVerification role={certMatch.role} identity={certMatch.identity} />;
+  }
 
   if (!match) {
     return (
@@ -40,7 +47,8 @@ function VerifyPage() {
           <ShieldAlert className="h-10 w-10 mx-auto text-red-400" />
           <h1 className="mt-4 text-2xl font-semibold">Verification Failed</h1>
           <p className="mt-2 text-sm text-white/60">
-            No digital passport is registered under code <span className="font-mono text-white/80">{code}</span>.
+            No digital passport or certificate is registered under code{" "}
+            <span className="font-mono text-white/80">{code}</span>.
           </p>
           <Link to="/" className="mt-6 inline-block rounded-lg border border-white/20 px-4 py-2 text-xs hover:bg-white/5">
             Back to AMS
@@ -49,6 +57,7 @@ function VerifyPage() {
       </main>
     );
   }
+
 
   const { role, identity } = match;
   const accent = role.accent;
@@ -165,5 +174,81 @@ function ScanBlock({ accent, url }: { accent: string; url: string }) {
         <div className="mt-1 font-mono text-[10px] text-white/40 break-all">{url}</div>
       </div>
     </div>
+  );
+}
+
+function CertificateVerification({ role, identity }: { role: RoleDNA; identity: CertificateIdentity }) {
+  const accent = role.accent;
+  return (
+    <main className="min-h-screen bg-[#05070d] text-white">
+      <div
+        className="border-b"
+        style={{ borderColor: `${accent}33`, background: `radial-gradient(80% 120% at 50% 0%, ${accent}22, transparent 70%)` }}
+      >
+        <div className="max-w-5xl mx-auto px-6 py-10">
+          <div className="text-[11px] font-mono tracking-[0.35em] uppercase" style={{ color: `${accent}cc` }}>
+            AMS Global Registry
+          </div>
+          <h1 className="mt-3 text-3xl lg:text-4xl font-semibold">Certificate Verification</h1>
+          <div
+            className="mt-4 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-semibold"
+            style={{ borderColor: "#34d39966", background: "#34d39918", color: "#6ee7b7" }}
+          >
+            <ShieldCheck className="h-4 w-4" /> Authentic · Issued · Registry Verified
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-6 py-8 grid gap-6 lg:grid-cols-[1.1fr_1fr]">
+        <section className="rounded-2xl border overflow-hidden" style={{ borderColor: `${accent}44` }}>
+          <Collectible3D
+            src={ROLE_CERTIFICATE[role.slug]}
+            filename={`${role.slug}-certificate.png`}
+            accent={accent}
+            label={`${identity.number} · Certificate`}
+            height={360}
+            eager
+          />
+          <div className="p-5 space-y-1">
+            <div className="text-xl font-semibold">{identity.title}</div>
+            <div className="text-[11px] uppercase tracking-widest" style={{ color: `${accent}bb` }}>
+              {role.name} · {role.archetype}
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-4">
+          <div className="rounded-2xl border p-5 space-y-3" style={{ borderColor: `${accent}33` }}>
+            <Row icon={<ScrollText className="h-4 w-4" />} label="Certificate Number" value={identity.number} accent={accent} mono />
+            <Row icon={<ShieldCheck className="h-4 w-4" />} label="Verification Code" value={identity.code} accent={accent} mono />
+            <Row icon={<Hash className="h-4 w-4" />} label="Registry Reference" value={identity.registry} accent={accent} mono />
+            <Row icon={<Landmark className="h-4 w-4" />} label="Issuing Authority" value={identity.authority} accent={accent} />
+            <Row icon={<CalendarClock className="h-4 w-4" />} label="Date of Issue" value={identity.issued} accent={accent} mono />
+            <Row icon={<Stamp className="h-4 w-4" />} label="Seal Motif" value={identity.seal} accent={accent} />
+          </div>
+
+          <div className="rounded-2xl border p-5" style={{ borderColor: `${accent}33` }}>
+            <div className="text-[11px] font-mono uppercase tracking-[0.3em] mb-3" style={{ color: `${accent}cc` }}>
+              Certification Track
+            </div>
+            <ol className="space-y-2">
+              {role.certificates.map((cert, i) => (
+                <li key={cert.key} className="flex items-center gap-3 text-sm text-white/75">
+                  <span
+                    className="h-6 w-6 shrink-0 rounded-full grid place-items-center text-[10px] font-bold"
+                    style={{ background: `${accent}22`, color: accent, border: `1px solid ${accent}55` }}
+                  >
+                    {i + 1}
+                  </span>
+                  {cert.label}
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <ScanBlock accent={accent} url={certificateVerifyUrl(role)} />
+        </section>
+      </div>
+    </main>
   );
 }

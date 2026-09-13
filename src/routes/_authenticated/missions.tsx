@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useSyncExternalStore, useState, useMemo } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Plus, Trash2, Play, Pause, CheckCircle2, EyeOff, Users, Calendar, Sparkles } from "lucide-react";

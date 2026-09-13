@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Author career progression — 10 unique stages. UI/UX data only.
 import type { DeveloperStage } from "./developer-stages";
 

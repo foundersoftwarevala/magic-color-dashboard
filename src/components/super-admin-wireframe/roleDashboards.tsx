@@ -20,6 +20,7 @@ const lazyDefault = (loader: Loader): Loader => loader;
 
 const ROLE_LOADERS: Partial<Record<RoleId, Loader>> = {
   // GRADE 1
+  boss_owner: lazyDefault(() => import("@/pages/BossPanel")),
   ceo: lazyDefault(() => import("@/pages/ai-ceo/AICEODashboard")),
   vala_ai_management: lazyDefault(() => import("@/pages/OverAI")),
   server_manager: lazyDefault(() => import("@/pages/server-manager/ServerManagerDashboard")),

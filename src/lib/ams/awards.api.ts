@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Award Management Center — API placeholder layer.
 //
 // Every function returns a Promise so the UI can be swapped onto a real

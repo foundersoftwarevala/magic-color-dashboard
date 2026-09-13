@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, OutletContextProvider } from 'react-router-dom';
 import { BossPanelHeader } from './BossPanelHeader';
 import { BossPanelSidebar } from './BossPanelSidebar';
 
@@ -32,7 +32,7 @@ export function BossPanelLayout({ children }: BossPanelLayoutProps) {
 
   return (
     <div 
-      className="min-h-screen flex flex-col"
+      className="ams-light min-h-screen flex flex-col"
       style={{ 
         background: '#F8FAFC',
         color: '#1E293B'
@@ -61,7 +61,9 @@ export function BossPanelLayout({ children }: BossPanelLayoutProps) {
             background: '#F8FAFC'
           }}
         >
-          {children || <Outlet context={{ activeSection, streamingOn }} />}
+          <OutletContextProvider value={{ activeSection, streamingOn }}>
+            {children || <Outlet />}
+          </OutletContextProvider>
         </main>
       </div>
     </div>
