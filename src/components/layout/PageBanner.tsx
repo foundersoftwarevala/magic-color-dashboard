@@ -1,0 +1,107 @@
+// @ts-nocheck
+/**
+ * Gradient hero banner — visual composition copied from the reference
+ * author-manager "WallHero" surface. Presentation only, no business logic.
+ */
+import type { ReactNode } from "react";
+import { Activity, Award, Sparkles, Star } from "lucide-react";
+
+interface HeroStat {
+  label: string;
+  value: ReactNode;
+}
+
+interface PageBannerProps {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  actions?: ReactNode;
+  live?: boolean;
+  liveLabel?: string;
+  panelTitle?: string;
+  panelSubtitle?: string;
+  stats?: HeroStat[];
+  /** Denser variant for module screens (less vertical space). */
+  compact?: boolean;
+}
+
+export function PageBanner({
+  eyebrow = "Software Vala",
+  title,
+  description,
+  actions,
+  live = false,
+  liveLabel,
+  panelTitle,
+  panelSubtitle,
+  stats = [],
+  compact = false,
+}: PageBannerProps) {
+  const showPanel = Boolean(panelTitle) || stats.length > 0;
+
+  return (
+    <section className={`hero-surface relative overflow-hidden ${compact ? "p-4 md:p-5" : "p-5 md:p-6"}`}>
+      <div className="absolute -top-24 -right-24 h-56 w-56 rounded-full bg-white/10 blur-3xl" />
+      <div className="absolute -bottom-24 -left-10 h-48 w-48 rounded-full bg-accent-pink/40 blur-3xl" />
+
+      <div className={`relative grid items-start ${compact ? "gap-4" : "gap-5"} ${showPanel ? "lg:grid-cols-2" : ""}`}>
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-3 py-1 text-xs font-medium backdrop-blur">
+            <Sparkles className="h-3.5 w-3.5" /> {eyebrow}
+          </div>
+          <h1 className={compact ? "mt-3 text-2xl font-bold tracking-tight md:text-3xl" : "mt-3 text-2xl font-bold tracking-tight md:text-4xl"}>{title}</h1>
+          {description && <p className={`max-w-md text-white/80 ${compact ? "mt-1.5 text-sm" : "mt-2 text-sm md:text-[15px]"}`}>{description}</p>}
+
+          <div className={`flex flex-wrap items-center gap-3 ${compact ? "mt-3" : "mt-4"}`}>
+            {actions}
+            <span
+              className={
+                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-medium " +
+                (live
+                  ? "border-white/30 bg-black/35 text-white"
+                  : "border-white/25 bg-black/25 text-white/85")
+              }
+            >
+              <Activity className="h-3 w-3" />
+              {live ? `Live · ${liveLabel ?? "database"}` : "Awaiting live signals"}
+            </span>
+          </div>
+        </div>
+
+        {showPanel && (
+          <div className="w-full max-w-sm lg:justify-self-end">
+            <div className="rounded-2xl border border-white/15 bg-black/25 p-4 backdrop-blur">
+              <div className="flex items-center gap-3">
+                <div className="relative">
+                  <span className="block h-11 w-11 rounded-full bg-gradient-to-br from-accent-pink to-primary-glow" />
+                  <span className="absolute -right-1 -top-1 grid h-6 w-6 place-items-center rounded-full bg-accent-amber text-black">
+                    <Star className="h-3.5 w-3.5" />
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5">
+                    <p className="truncate font-semibold">{panelTitle}</p>
+                    <Award className="h-4 w-4 text-accent-amber" />
+                  </div>
+                  {panelSubtitle && <p className="text-xs text-white/70">{panelSubtitle}</p>}
+                </div>
+              </div>
+              {stats.length > 0 && (
+                <div className="mt-3 grid grid-cols-3 gap-2 text-center">
+                  {stats.slice(0, 3).map((s) => (
+                    <div key={s.label} className="rounded-xl border border-white/15 bg-white/10 py-2">
+                      <p className="text-[10px] uppercase tracking-wider text-white/60">{s.label}</p>
+                      <p className="text-sm font-semibold">{s.value}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+export default PageBanner;
