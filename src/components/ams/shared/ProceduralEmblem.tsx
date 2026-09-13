@@ -1,4 +1,3 @@
-// @ts-nocheck
 /**
  * ProceduralEmblem — deterministic, unique SVG art for every award.
  *

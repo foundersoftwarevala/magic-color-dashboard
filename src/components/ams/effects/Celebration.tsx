@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Crown, Trophy, Award, Sparkles, Star, Diamond, Gift } from "lucide-react";
 import trophy3d from "@/assets/trophy-3d.png";
@@ -8,6 +7,7 @@ import {
   playWin, playRankUp, playLevelUp, playDiamond, playFireworks,
   playCoinDrop, playMythic, playRandom,
 } from "@/lib/celebrate";
+import { getSoundPrefs } from "@/lib/ams/ui-sound";
 
 // ──────────────────────────────────────────────────────────────
 // Types
@@ -237,10 +237,13 @@ function Overlay({ payload, onClose }: { payload: CelebrationPayload; onClose: (
   return (
     <div
       onClick={onClose}
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
       className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden"
       style={{ background: meta.full ? "radial-gradient(ellipse at center, rgba(8,10,24,0.75), rgba(0,0,0,0.92))" : "radial-gradient(ellipse at center, rgba(8,10,24,0.55), rgba(0,0,0,0.75))", backdropFilter: "blur(8px)" }}
     >
-      <canvas ref={canvasRef} className="pointer-events-none absolute inset-0" />
+      <canvas ref={canvasRef} aria-hidden="true" className="pointer-events-none absolute inset-0" />
 
       {/* Spotlight rings */}
       <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
@@ -294,7 +297,7 @@ export function CelebrationProvider({ children }: { children: React.ReactNode })
 
   const celebrate = useCallback((p: CelebrationPayload) => {
     setQueue((q) => [...q, p]);
-    if (soundOn) {
+    if (soundOn && getSoundPrefs().enabled) {
       try { KIND_META[p.kind].sound(); } catch { /* ignore */ }
     }
   }, [soundOn]);

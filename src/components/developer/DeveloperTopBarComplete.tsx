@@ -22,6 +22,9 @@ interface DeveloperTopBarCompleteProps {
   notifications?: any[];
 }
 
+/** Stable default: a fresh [] on every render re-fires the sync effect below. */
+const NO_NOTIFICATIONS: any[] = [];
+
 const DeveloperTopBarComplete = ({
   timerRunning,
   elapsedTime,
@@ -30,7 +33,7 @@ const DeveloperTopBarComplete = ({
   sprintStatus = 'active',
   onNotificationClick,
   onAIClick,
-  notifications = []
+  notifications = NO_NOTIFICATIONS
 }: DeveloperTopBarCompleteProps) => {
   const navigate = useNavigate();
   const { signOut } = useAuth();

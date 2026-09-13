@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useState } from "react";
 import { ArrowLeft, Volume2 } from "lucide-react";

@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Per-role visual identity system. Every role gets a completely different
 // palette, environment, pattern, typography feel, iconography and materials.
 // UI/UX tokens only — no logic.
@@ -32,7 +31,7 @@ export interface RoleTheme {
   ribbon: [string, string];
 }
 
-export const ROLE_THEMES: Record<RoleSlug, RoleTheme> = {
+export const ROLE_THEMES = {
   developer: {
     slug: "developer",
     displayFont: `"JetBrains Mono", "Geist Mono", ui-monospace, monospace`,
@@ -209,4 +208,69 @@ export const ROLE_THEMES: Record<RoleSlug, RoleTheme> = {
     glyphIcon: "✦", environmentLabel: "Member's Foyer", ceremony: "Welcome Rite",
     ribbon: ["#e2e8f0","#334155"],
   },
-};
+  manager: {
+    slug: "manager",
+    displayFont: `"Sora", "Outfit", system-ui, sans-serif`,
+    bodyFont: `"Manrope", system-ui, sans-serif`,
+    environment: "radial-gradient(1400px 700px at 25% -10%, rgba(96,165,250,0.24), transparent 60%), radial-gradient(1000px 500px at 90% 100%, rgba(30,64,175,0.20), transparent 60%), linear-gradient(160deg,#060d18 0%,#02060c 100%)",
+    cover: "linear-gradient(120deg,#0d2038 0%,#123054 40%,#0d2038 100%)",
+    primary: "#60a5fa", secondary: "#1e40af", accent: "#c7d9ff",
+    ink: "#060d18", paper: "#0c1622",
+    glow: "rgba(96,165,250,0.5)", pattern: "network-nodes",
+    leather: "linear-gradient(140deg,#0d2038,#060d18)",
+    metallic: "linear-gradient(135deg,#dce9ff,#2d5fa8 45%,#dce9ff 100%)",
+    glassTint: "rgba(96,165,250,0.09)",
+    trophyShape: "obelisk", medalShape: "octagon", badgeShape: "shield",
+    glyphIcon: "✥", environmentLabel: "Orchestration Deck", ceremony: "Compass Alignment",
+    ribbon: ["#60a5fa","#1e3a8a"],
+  },
+  administrator: {
+    slug: "administrator",
+    displayFont: `"Space Grotesk", "Sora", sans-serif`,
+    bodyFont: `"Inter", system-ui, sans-serif`,
+    environment: "radial-gradient(1400px 700px at 55% -10%, rgba(167,139,250,0.26), transparent 60%), radial-gradient(1000px 500px at 10% 100%, rgba(91,33,182,0.20), transparent 60%), linear-gradient(160deg,#0b0718 0%,#04020c 100%)",
+    cover: "linear-gradient(120deg,#1e1140 0%,#2c1a5e 40%,#1e1140 100%)",
+    primary: "#a78bfa", secondary: "#5b21b6", accent: "#ddd6fe",
+    ink: "#0b0718", paper: "#130c24",
+    glow: "rgba(167,139,250,0.52)", pattern: "circuit",
+    leather: "linear-gradient(140deg,#1e1140,#0b0718)",
+    metallic: "linear-gradient(135deg,#e7deff,#6d3fd6 45%,#e7deff 100%)",
+    glassTint: "rgba(167,139,250,0.10)",
+    trophyShape: "tower", medalShape: "hexagon", badgeShape: "crest",
+    glyphIcon: "⛨", environmentLabel: "Keystone Citadel", ceremony: "Keystone Sealing",
+    ribbon: ["#a78bfa","#4c1d95"],
+  },
+  founder: {
+    slug: "founder",
+    displayFont: `"Instrument Serif", "Playfair Display", serif`,
+    bodyFont: `"Work Sans", system-ui, sans-serif`,
+    environment: "radial-gradient(1400px 700px at 50% -10%, rgba(232,193,92,0.28), transparent 60%), radial-gradient(1000px 500px at 90% 100%, rgba(146,104,20,0.20), transparent 60%), linear-gradient(160deg,#120f04 0%,#060402 100%)",
+    cover: "linear-gradient(120deg,#2c2206 0%,#4a3a0c 40%,#2c2206 100%)",
+    primary: "#e8c15c", secondary: "#926814", accent: "#fff0c2",
+    ink: "#120f04", paper: "#1a1508",
+    glow: "rgba(232,193,92,0.58)", pattern: "royal-crest",
+    leather: "linear-gradient(140deg,#2c2206,#120f04)",
+    metallic: "linear-gradient(135deg,#fff3cc,#a87c1c 45%,#fff3cc 100%)",
+    glassTint: "rgba(232,193,92,0.11)",
+    trophyShape: "star", medalShape: "sun", badgeShape: "starburst",
+    glyphIcon: "✷", environmentLabel: "Origin Hall", ceremony: "Origin Rite",
+    ribbon: ["#e8c15c","#6b4c0a"],
+  },
+  operator: {
+    slug: "operator",
+    displayFont: `"Space Grotesk", "Sora", sans-serif`,
+    bodyFont: `"Inter", system-ui, sans-serif`,
+    environment: "radial-gradient(1400px 700px at 20% -10%, rgba(52,211,153,0.24), transparent 60%), radial-gradient(1000px 500px at 90% 100%, rgba(15,118,110,0.20), transparent 60%), linear-gradient(160deg,#04120e 0%,#010705 100%)",
+    cover: "linear-gradient(120deg,#07281f 0%,#0b3a2c 40%,#07281f 100%)",
+    primary: "#34d399", secondary: "#0f766e", accent: "#d1fae5",
+    ink: "#04120e", paper: "#0a1a16",
+    glow: "rgba(52,211,153,0.52)", pattern: "circuit",
+    leather: "linear-gradient(140deg,#07281f,#04120e)",
+    metallic: "linear-gradient(135deg,#d8f7ea,#2f8f76 45%,#d8f7ea 100%)",
+    glassTint: "rgba(52,211,153,0.10)",
+    trophyShape: "prism", medalShape: "gear", badgeShape: "gear",
+    glyphIcon: "◎", environmentLabel: "Control Deck", ceremony: "Clean-Shift Rite",
+    ribbon: ["#34d399","#0b4f43"],
+  },
+} as unknown as Record<RoleSlug, RoleTheme>;
+

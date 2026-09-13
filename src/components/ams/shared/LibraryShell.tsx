@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";

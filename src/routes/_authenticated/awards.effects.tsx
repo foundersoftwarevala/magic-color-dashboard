@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Sparkles, Coins, Crown, Trophy, Award as AwardIcon, Zap, Gift, Star } from "lucide-react";

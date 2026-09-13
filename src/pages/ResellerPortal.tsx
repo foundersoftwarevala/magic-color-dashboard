@@ -42,7 +42,7 @@ const ResellerPortal = () => {
 
   useEffect(() => {
     // Simulate initial data load
-    const timer = setTimeout(() => setIsLoading(false), 1000);
+    const timer = setTimeout(() => setIsLoading(false), 200);
     return () => clearTimeout(timer);
   }, []);
 

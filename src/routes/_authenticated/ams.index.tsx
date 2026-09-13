@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -98,8 +97,7 @@ function AmsListPage() {
         />
       ) : (
         <div className="surface-card overflow-hidden">
-          <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] text-sm">
+          <table className="w-full text-sm">
             <thead className="bg-muted/30 text-[11px] uppercase tracking-wider text-muted-foreground">
               <tr>
                 <th className="text-left px-4 py-2.5 w-28">Ticket</th>
@@ -134,7 +132,6 @@ function AmsListPage() {
               ))}
             </tbody>
           </table>
-          </div>
         </div>
       )}
     </div>

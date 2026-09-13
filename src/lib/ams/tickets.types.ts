@@ -1,4 +1,3 @@
-// @ts-nocheck
 export const AMS_STATUSES = [
   "draft","submitted","assigned","accepted","in_progress",
   "waiting_customer","waiting_developer","waiting_qa","testing",

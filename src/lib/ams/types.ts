@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Award Management Center — domain types.
 
 export type AwardCategory =

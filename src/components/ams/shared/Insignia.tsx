@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Procedural insignias — every badge / trophy / medal is unique per
 // (role × module × grade). No two outputs share shape, material, ornament.
 // Pure SVG, zero assets, deterministic by name.

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { createFileRoute } from "@tanstack/react-router";
 import { ArrowUpCircle } from "lucide-react";
 import { LibraryShell } from "@/components/ams/shared/LibraryShell";

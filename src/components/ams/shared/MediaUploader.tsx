@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState } from "react";
 import { Upload, FileMusic, Sparkles, Film, Image as ImageIcon, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -34,7 +33,7 @@ function Field({
           <span className="text-trophy">{icon}</span>{label}
         </div>
         {local && (
-          <Button size="icon" variant="ghost" onClick={() => { setLocal(""); onChange(undefined); }}>
+          <Button size="icon" variant="ghost" title="Remove media" aria-label="Remove media" onClick={() => { setLocal(""); onChange(undefined); }}>
             <X className="h-3.5 w-3.5" />
           </Button>
         )}

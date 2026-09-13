@@ -1,4 +1,3 @@
-// @ts-nocheck
 // Developer career progression — 10 unique stages. UI/UX data only.
 // Each stage has its own material, palette, trophy shape, medal shape,
 // passport style, badge motif, nameplate, background theme, and unlock preset.
