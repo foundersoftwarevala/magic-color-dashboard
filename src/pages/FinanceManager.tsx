@@ -130,7 +130,7 @@ const FinanceManager = () => {
   };
 
   return (
-    <div className="ams-light min-h-screen bg-slate-50 flex w-full">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex w-full">
       <FinanceSidebar activeView={activeView} onViewChange={handleViewChange} />
       
       <div className="flex-1 flex flex-col overflow-hidden">

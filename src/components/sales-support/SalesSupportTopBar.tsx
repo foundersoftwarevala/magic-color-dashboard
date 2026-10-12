@@ -15,11 +15,8 @@ interface SalesSupportTopBarProps {
   onNotificationAction?: (id: string) => void;
 }
 
-/** Stable default: a fresh [] on every render re-fires the sync effect below. */
-const NO_NOTIFICATIONS: NotificationAlert[] = [];
-
 const SalesSupportTopBar = ({
-  notifications = NO_NOTIFICATIONS,
+  notifications = [],
   onDismissNotification,
   onNotificationAction
 }: SalesSupportTopBarProps) => {

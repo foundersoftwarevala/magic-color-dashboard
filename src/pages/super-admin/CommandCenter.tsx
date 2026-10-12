@@ -713,7 +713,7 @@ const SuperAdminCommandCenter = () => {
     if (activeCategory) {
       setShowWelcome(false);
     } else {
-      const timer = setTimeout(() => setShowWelcome(false), 600);
+      const timer = setTimeout(() => setShowWelcome(false), 2500);
       return () => clearTimeout(timer);
     }
   }, [activeCategory]);

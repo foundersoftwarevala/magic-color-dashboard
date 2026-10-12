@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SliderBanner } from "@/components/slider-banner/SliderBanner";
+import { BannerThemeControls } from "@/components/slider-banner/BannerThemeControls";
 import { RoleDashboard, preloadRoleDashboard } from "@/components/super-admin-wireframe/roleDashboards";
 
 
@@ -168,6 +169,8 @@ function CockpitBanner() {
           { label: "Uptime", value: "99.9%" },
         ]}
       />
+      <BannerThemeControls />
+      <SliderBanner />
     </section>
   );
 }

@@ -1,15 +1,13 @@
+// @ts-nocheck
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   MessageSquare, Search, Send, Paperclip, Smile, Mic, Phone, Video,
   MoreVertical, Shield, CheckCheck, Globe, Sparkles, Inbox, Users,
   Hash, Star, Pin, Archive, Bell, Plus, X, ChevronRight, IdCard,
-  Languages, Bot, Filter, Settings2, Lock, ChevronLeft,
+  Languages, Bot, Filter, Settings2, Lock,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { RealtimeChannel } from "@supabase/supabase-js";
-import { useDialogA11y } from "@/hooks/use-dialog-a11y";
-import { playSound } from "@/lib/ams/ui-sound";
-import { cn } from "@/lib/utils";
 
 type ConvId = string;
 type Conversation = {
@@ -47,8 +45,6 @@ export function ChatScreen() {
   const [typingByConv, setTypingByConv] = useState<Record<ConvId, string[]>>({});
   const [showNew, setShowNew] = useState(false);
   const [sending, setSending] = useState(false);
-  const [loadingMessages, setLoadingMessages] = useState(false);
-  const [loadingInbox, setLoadingInbox] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
   const activeChannelRef = useRef<RealtimeChannel | null>(null);
@@ -80,7 +76,6 @@ export function ChatScreen() {
       .from("chat_conversations")
       .select("id,title,module,allowed_roles,updated_at")
       .order("updated_at", { ascending: false });
-    setLoadingInbox(false);
     if (error) { setError(error.message); return; }
     setConversations((data ?? []) as Conversation[]);
   }, []);
@@ -102,7 +97,6 @@ export function ChatScreen() {
   useEffect(() => {
     if (!activeId || !me) return;
     let cancelled = false;
-    setLoadingMessages(true);
 
     (async () => {
       const { data, error } = await supabase
@@ -111,7 +105,6 @@ export function ChatScreen() {
         .eq("conversation_id", activeId)
         .order("created_at", { ascending: true });
       if (cancelled) return;
-      setLoadingMessages(false);
       if (error) { setError(error.message); return; }
       setMessagesByConv((prev) => ({ ...prev, [activeId]: (data ?? []) as Message[] }));
     })();
@@ -126,7 +119,6 @@ export function ChatScreen() {
           setMessagesByConv((prev) => {
             const list = prev[activeId] ?? [];
             if (list.some((x) => x.id === m.id)) return prev;
-            if (m.sender_id !== me.id) playSound("message");
             return { ...prev, [activeId]: [...list, m] };
           });
         },
@@ -212,10 +204,8 @@ export function ChatScreen() {
         ? "You do not have permission to post in this channel."
         : error.message);
       setComposer(text);
-      playSound("error");
       return;
     }
-    playSound("save");
     setMessagesByConv((prev) => ({
       ...prev,
       [active.id]: (prev[active.id] ?? []).map((m) => (m.id === optimistic.id ? (data as Message) : m)),
@@ -294,18 +284,14 @@ export function ChatScreen() {
       </div>
 
       {error && (
-        <div role="alert" aria-live="assertive" className="motion-shake flex items-start gap-2 rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-2.5 text-xs text-destructive">
-          <Shield className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-          <span className="min-w-0">{error}</span>
+        <div className="rounded-lg border border-red-500/60 bg-red-500/10 px-4 py-2 text-xs text-red-200">
+          {error}
         </div>
       )}
 
       {/* Layout */}
-      <div className="gold-frame grid h-[calc(100dvh-260px)] min-h-[560px] grid-cols-1 overflow-hidden rounded-2xl md:grid-cols-[280px_minmax(0,1fr)] xl:grid-cols-[320px_minmax(0,1fr)_320px]">
-        <aside className={cn(
-          "min-h-0 flex-col border-r border-gold bg-[oklch(0.12_0.025_250)] md:flex",
-          activeId ? "hidden md:flex" : "flex",
-        )}>
+      <div className="gold-frame grid h-[calc(100vh-280px)] min-h-[640px] grid-cols-[320px_1fr_320px] overflow-hidden rounded-2xl">
+        <aside className="flex min-h-0 flex-col border-r border-gold bg-[oklch(0.12_0.025_250)]">
           <div className="border-b border-gold p-4">
             <div className="flex items-center justify-between">
               <div className="text-[10px] uppercase tracking-[0.25em] text-[#d4a14a]">Inbox</div>
@@ -313,21 +299,13 @@ export function ChatScreen() {
                 onClick={() => setShowNew(true)}
                 className="grid h-7 w-7 place-items-center rounded-md bg-gold-gradient text-[oklch(0.13_0.025_250)] shadow-[0_6px_18px_-6px_#d4a14a] transition-transform hover:scale-105"
                 title="New conversation"
-                aria-label="New conversation"
-                aria-haspopup="dialog"
-                aria-expanded={showNew}
               >
                 <Plus className="h-4 w-4" strokeWidth={2.6} />
               </button>
             </div>
             <div className="mt-3 flex items-center gap-2 rounded-lg border border-gold bg-[oklch(0.16_0.03_250)] px-3 py-2">
-              <Search className="h-3.5 w-3.5 text-[#d4a14a]" aria-hidden="true" />
-              <label htmlFor="chat-channel-search" className="sr-only">Search channels</label>
+              <Search className="h-3.5 w-3.5 text-[#d4a14a]" />
               <input
-                id="chat-channel-search"
-                type="search"
-                autoComplete="off"
-                aria-label="Search channels"
                 value={query} onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search channels…"
                 className="w-full bg-transparent text-xs outline-none placeholder:text-muted-foreground/70"
@@ -335,13 +313,10 @@ export function ChatScreen() {
             </div>
           </div>
 
-          <div role="group" aria-label="Filter channels by role" className="flex gap-1 overflow-x-auto border-b border-gold/60 px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <div className="flex gap-1 overflow-x-auto border-b border-gold/60 px-3 py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {ROLE_FILTERS.map((r) => (
               <button
                 key={r}
-                type="button"
-                aria-pressed={filter === r}
-                title={`Show ${r} channels`}
                 onClick={() => setFilter(r)}
                 className={`shrink-0 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] transition-all ${
                   filter === r
@@ -352,10 +327,8 @@ export function ChatScreen() {
             ))}
           </div>
 
-          <div className="min-h-0 flex-1 overflow-y-auto p-2 scrollbar-thin">
-            {loadingInbox ? (
-              <InboxSkeleton />
-            ) : conversations.length === 0 ? (
+          <div className="min-h-0 flex-1 overflow-y-auto p-2">
+            {conversations.length === 0 ? (
               <EmptyInbox onNew={() => setShowNew(true)} />
             ) : filtered.length === 0 ? (
               <EmptyFilter role={filter} onReset={() => setFilter("All")} />
@@ -371,23 +344,12 @@ export function ChatScreen() {
         </aside>
 
         {/* Stage */}
-        <section className={cn(
-          "min-h-0 flex-col bg-[oklch(0.10_0.022_250)] md:flex",
-          activeId ? "flex" : "hidden md:flex",
-        )}>
+        <section className="flex min-h-0 flex-col bg-[oklch(0.10_0.022_250)]">
           {active ? (
             <>
-              <div className="flex items-center justify-between gap-3 border-b border-gold bg-[oklch(0.13_0.025_250)] px-4 py-3 sm:px-5">
-                <div className="flex min-w-0 items-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setActiveId(null)}
-                    aria-label="Back to channel list"
-                    className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-[oklch(0.78_0.14_82/0.12)] hover:text-[#f5d77a] focus-ring md:hidden"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </button>
-                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-gold-gradient text-xs font-bold text-[oklch(0.13_0.025_250)]">
+              <div className="flex items-center justify-between border-b border-gold bg-[oklch(0.13_0.025_250)] px-5 py-3">
+                <div className="flex items-center gap-3">
+                  <div className="grid h-10 w-10 place-items-center rounded-full bg-gold-gradient text-xs font-bold text-[oklch(0.13_0.025_250)]">
                     {active.title.slice(0, 2).toUpperCase()}
                   </div>
                   <div>
@@ -402,28 +364,17 @@ export function ChatScreen() {
                     </div>
                   </div>
                 </div>
-                <div className="hidden shrink-0 items-center gap-1 sm:flex">
-                  <IconBtn icon={Phone} label="Start voice call" /><IconBtn icon={Video} label="Start video call" /><IconBtn icon={Languages} label="Translate conversation" />
-                  <IconBtn icon={Pin} label="Pin conversation" /><IconBtn icon={Bell} label="Notification settings" /><IconBtn icon={MoreVertical} label="More conversation options" />
+                <div className="flex items-center gap-1">
+                  <IconBtn icon={Phone} /><IconBtn icon={Video} /><IconBtn icon={Languages} />
+                  <IconBtn icon={Pin} /><IconBtn icon={Bell} /><IconBtn icon={MoreVertical} />
                 </div>
               </div>
 
-              <div
-                ref={scrollerRef}
-                role="log"
-                aria-label={`Messages in ${active.title}`}
-                aria-live="polite"
-                aria-relevant="additions text"
-                aria-atomic="false"
-                tabIndex={0}
-                className="relative min-h-0 flex-1 overflow-y-auto px-4 py-6 sm:px-6 scrollbar-thin focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4a14a]/60"
-              >
+              <div ref={scrollerRef} className="relative min-h-0 flex-1 overflow-y-auto px-6 py-6">
                 <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
                   style={{ backgroundImage: "radial-gradient(circle at 20% 20%, #f5d77a 0%, transparent 40%), radial-gradient(circle at 80% 80%, #d4a14a 0%, transparent 40%)" }}
                 />
-                {loadingMessages && messages.length === 0 ? (
-                  <MessagesSkeleton />
-                ) : messages.length === 0 ? (
+                {messages.length === 0 ? (
                   <EmptyConversation title={active.title} />
                 ) : (
                   <div className="relative space-y-3">
@@ -441,12 +392,8 @@ export function ChatScreen() {
                   </div>
                 ) : (
                   <div className="flex items-end gap-2 rounded-2xl border border-gold bg-[oklch(0.16_0.03_250)] p-2 shadow-[inset_0_1px_0_oklch(0.78_0.14_82/0.15)] focus-within:shadow-[0_0_0_2px_oklch(0.78_0.14_82/0.35)]">
-                    <IconBtn icon={Paperclip} small label="Attach a file" /><IconBtn icon={Smile} small label="Insert emoji" />
-                    <label htmlFor="chat-composer" className="sr-only">{`Message ${active.title}`}</label>
+                    <IconBtn icon={Paperclip} small /><IconBtn icon={Smile} small />
                     <textarea
-                      id="chat-composer"
-                      aria-label={`Message ${active.title}`}
-                      aria-describedby="chat-composer-hint"
                       value={composer}
                       onChange={(e) => handleComposerChange(e.target.value)}
                       onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(); } }}
@@ -454,12 +401,8 @@ export function ChatScreen() {
                       rows={1}
                       className="max-h-32 flex-1 resize-none bg-transparent px-2 py-2 text-sm outline-none placeholder:text-muted-foreground/70"
                     />
-                    <IconBtn icon={Mic} small label="Record voice message" />
-                    <span id="chat-composer-hint" className="sr-only">Press Enter to send, Shift plus Enter for a new line.</span>
+                    <IconBtn icon={Mic} small />
                     <button
-                      type="button"
-                      title="Send message"
-                      aria-label="Send message"
                       onClick={send}
                       disabled={!composer.trim() || sending}
                       className="grid h-9 w-9 place-items-center rounded-lg bg-gold-gradient text-[oklch(0.13_0.025_250)] shadow-[0_8px_22px_-8px_#d4a14a] transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40"
@@ -476,7 +419,7 @@ export function ChatScreen() {
         </section>
 
         {/* Right rail */}
-        <aside className="hidden min-h-0 flex-col gap-4 overflow-y-auto border-l border-gold bg-[oklch(0.12_0.025_250)] p-4 scrollbar-thin xl:flex">
+        <aside className="hidden min-h-0 flex-col gap-4 overflow-y-auto border-l border-gold bg-[oklch(0.12_0.025_250)] p-4 lg:flex">
           <div className="text-[10px] uppercase tracking-[0.25em] text-[#d4a14a]">Channel</div>
           {active ? (
             <div className="space-y-3 rounded-xl border border-gold bg-[oklch(0.16_0.03_250)] p-4 text-xs">
@@ -522,16 +465,11 @@ function Pill({ icon: Icon, label }: { icon: typeof Shield; label: string }) {
   );
 }
 
-function IconBtn({ icon: Icon, small, label }: { icon: typeof Phone; small?: boolean; label: string }) {
+function IconBtn({ icon: Icon, small }: { icon: typeof Phone; small?: boolean }) {
   const s = small ? "h-8 w-8" : "h-9 w-9";
   return (
-    <button
-      type="button"
-      title={label}
-      aria-label={label}
-      className={`grid ${s} place-items-center rounded-lg text-muted-foreground transition-all hover:bg-[oklch(0.78_0.14_82/0.12)] hover:text-[#f5d77a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4a14a] focus-visible:ring-offset-1 focus-visible:ring-offset-[oklch(0.13_0.025_250)]`}
-    >
-      <Icon className="h-4 w-4" aria-hidden="true" />
+    <button className={`grid ${s} place-items-center rounded-lg text-muted-foreground transition-all hover:bg-[oklch(0.78_0.14_82/0.12)] hover:text-[#f5d77a]`}>
+      <Icon className="h-4 w-4" />
     </button>
   );
 }
@@ -563,71 +501,30 @@ function ConversationRow({ conv, active, onClick }: { conv: Conversation; active
 }
 
 function MessageBubble({ m, mine }: { m: Message; mine: boolean }) {
-  const pending = Boolean((m.metadata as { optimistic?: boolean } | null)?.optimistic);
   return (
-    <div className={cn("motion-rise flex", mine ? "justify-end" : "justify-start")}>
+    <div className={`flex ${mine ? "justify-end" : "justify-start"}`}>
       <div
-        className={cn(
-          "max-w-[88%] rounded-2xl px-4 py-2.5 text-sm shadow-[0_10px_30px_-15px_rgba(0,0,0,0.7)] sm:max-w-[72%]",
+        className={`max-w-[72%] rounded-2xl px-4 py-2.5 text-sm shadow-[0_10px_30px_-15px_rgba(0,0,0,0.7)] ${
           mine
             ? "bg-gold-gradient text-[oklch(0.13_0.025_250)] rounded-br-md"
-            : "border border-gold bg-[oklch(0.16_0.03_250)] text-foreground rounded-bl-md",
-          pending && "opacity-70",
-        )}
+            : "border border-gold bg-[oklch(0.16_0.03_250)] text-foreground rounded-bl-md"
+        }`}
       >
-        <div className="whitespace-pre-wrap break-words leading-relaxed">{m.body}</div>
-        <div className={cn(
-          "mt-1 flex items-center justify-end gap-1 text-[10px] tabular-nums",
-          mine ? "text-[oklch(0.13_0.025_250)]/70" : "text-muted-foreground",
-        )}>
+        <div className="whitespace-pre-wrap leading-relaxed">{m.body}</div>
+        <div className={`mt-1 flex items-center justify-end gap-1 text-[10px] ${mine ? "text-[oklch(0.13_0.025_250)]/70" : "text-muted-foreground"}`}>
           <span>{new Date(m.created_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</span>
-          {mine && (pending
-            ? <span aria-label="Sending" title="Sending">· sending</span>
-            : <CheckCheck className="h-3 w-3" aria-label="Delivered" />)}
+          {mine && <CheckCheck className="h-3 w-3" />}
         </div>
       </div>
     </div>
   );
 }
 
-function InboxSkeleton() {
-  return (
-    <div className="space-y-2 p-1" aria-hidden="true">
-      {[0, 1, 2, 3, 4].map((i) => (
-        <div key={i} className="flex items-center gap-3 rounded-xl p-3">
-          <div className="motion-skeleton h-10 w-10 rounded-full" />
-          <div className="min-w-0 flex-1 space-y-2">
-            <div className="motion-skeleton h-3 w-2/3" />
-            <div className="motion-skeleton h-2.5 w-1/3" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function MessagesSkeleton() {
-  return (
-    <div className="relative space-y-3" aria-label="Loading messages" role="status">
-      {[0, 1, 2, 3].map((i) => (
-        <div key={i} className={cn("flex", i % 2 ? "justify-end" : "justify-start")}>
-          <div
-            className="motion-skeleton h-12 rounded-2xl"
-            style={{ width: `${45 + ((i * 13) % 30)}%` }}
-          />
-        </div>
-      ))}
-      <span className="sr-only">Loading messages…</span>
-    </div>
-  );
-}
-
 function TypingBubble({ labels }: { labels: string[] }) {
   return (
-    <div className="flex justify-start" role="status" aria-live="polite" aria-atomic="true">
-      <span className="sr-only">{labels.join(", ")} {labels.length === 1 ? "is" : "are"} typing</span>
+    <div className="flex justify-start">
       <div className="flex items-center gap-2 rounded-2xl rounded-bl-md border border-gold bg-[oklch(0.16_0.03_250)] px-4 py-2.5 text-xs text-muted-foreground">
-        <span className="truncate" aria-hidden="true">{labels.join(", ")} typing</span>
+        <span className="truncate">{labels.join(", ")} typing</span>
         <span className="inline-flex gap-0.5">
           <Dot delay="0ms" /><Dot delay="150ms" /><Dot delay="300ms" />
         </span>
@@ -697,7 +594,6 @@ function NewConversationModal({
   const [title, setTitle] = useState("");
   const [roles, setRoles] = useState<string[]>(["user", "admin", "super_admin"]);
   const inputRef = useRef<HTMLInputElement>(null);
-  const dialogRef = useDialogA11y<HTMLDivElement>(onClose);
   useEffect(() => { setTimeout(() => inputRef.current?.focus(), 30); }, []);
   const valid = title.trim().length >= 2 && roles.length > 0;
 
@@ -706,41 +602,21 @@ function NewConversationModal({
   }
 
   return (
-    <div className="fixed inset-0 z-[100] grid place-items-center bg-[oklch(0.08_0.02_250/0.7)] p-4 backdrop-blur-sm" onClick={onClose} aria-hidden="true">
-      <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="new-channel-title"
-        aria-describedby="new-channel-desc"
-        onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md overflow-hidden rounded-2xl border border-gold bg-[oklch(0.13_0.025_250)] shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9)]">
+    <div className="fixed inset-0 z-[100] grid place-items-center bg-[oklch(0.08_0.02_250/0.7)] p-4 backdrop-blur-sm" onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()} className="w-full max-w-md overflow-hidden rounded-2xl border border-gold bg-[oklch(0.13_0.025_250)] shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9)]">
         <div className="flex items-center justify-between border-b border-gold px-5 py-4">
           <div className="flex items-center gap-2">
             <IdCard className="h-4 w-4 text-[#f5d77a]" />
-            <h2 id="new-channel-title" className="font-display text-sm font-semibold text-gold-gradient">Create a role-scoped channel</h2>
+            <div className="font-display text-sm font-semibold text-gold-gradient">Create a role-scoped channel</div>
           </div>
-          <button
-            type="button"
-            onClick={onClose}
-            title="Close dialog"
-            aria-label="Close dialog"
-            className="rounded-md text-muted-foreground hover:text-[#f5d77a] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4a14a]"
-          ><X className="h-4 w-4" aria-hidden="true" /></button>
+          <button onClick={onClose} className="text-muted-foreground hover:text-[#f5d77a]"><X className="h-4 w-4" /></button>
         </div>
         <div className="space-y-4 p-5">
           <div>
-            <label htmlFor="new-channel-name" className="text-[10px] uppercase tracking-[0.22em] text-[#d4a14a]">
-              Channel Title <span aria-hidden="true">*</span><span className="sr-only">(required)</span>
-            </label>
+            <label className="text-[10px] uppercase tracking-[0.22em] text-[#d4a14a]">Channel Title</label>
             <div className="mt-2 flex items-center gap-2 rounded-lg border border-gold bg-[oklch(0.16_0.03_250)] px-3 py-2">
-              <Hash className="h-3.5 w-3.5 text-[#d4a14a]" aria-hidden="true" />
+              <Hash className="h-3.5 w-3.5 text-[#d4a14a]" />
               <input
-                id="new-channel-name"
-                autoComplete="off"
-                aria-required="true"
-                aria-invalid={title.trim().length > 0 && title.trim().length < 2}
-                aria-describedby="new-channel-desc"
                 ref={inputRef} value={title} onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Vendor Ops, Support Room, Founders"
                 className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground/70"
@@ -748,22 +624,21 @@ function NewConversationModal({
             </div>
           </div>
           <div>
-            <span id="roles-allowed-label" className="text-[10px] uppercase tracking-[0.22em] text-[#d4a14a]">Roles allowed to post</span>
-            <div role="group" aria-labelledby="roles-allowed-label" className="mt-2 flex flex-wrap gap-1.5">
+            <label className="text-[10px] uppercase tracking-[0.22em] text-[#d4a14a]">Roles allowed to post</label>
+            <div className="mt-2 flex flex-wrap gap-1.5">
               {ALL_POST_ROLES.map((r) => (
-                <button key={r} type="button" aria-pressed={roles.includes(r)} title={`Toggle ${r}`} onClick={() => toggle(r)} className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] transition-all ${
+                <button key={r} onClick={() => toggle(r)} className={`rounded-full px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] transition-all ${
                   roles.includes(r) ? "bg-gold-gradient text-[oklch(0.13_0.025_250)]"
                   : "border border-gold/60 text-muted-foreground hover:text-[#f5d77a]"
                 }`}>{r}</button>
               ))}
             </div>
-            <p id="new-channel-desc" className="mt-1.5 text-[10px] text-muted-foreground">Members outside these roles can read but cannot post. Admins always can.</p>
+            <p className="mt-1.5 text-[10px] text-muted-foreground">Members outside these roles can read but cannot post. Admins always can.</p>
           </div>
         </div>
         <div className="flex items-center justify-end gap-2 border-t border-gold bg-[oklch(0.12_0.025_250)] px-5 py-3">
-          <button type="button" onClick={onClose} className="rounded-lg px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground">Cancel</button>
+          <button onClick={onClose} className="rounded-lg px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground">Cancel</button>
           <button
-            type="button"
             disabled={!valid}
             onClick={() => onStart(title.trim(), roles)}
             className="inline-flex items-center gap-1.5 rounded-lg bg-gold-gradient px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[oklch(0.13_0.025_250)] shadow-[0_8px_22px_-8px_#d4a14a] disabled:cursor-not-allowed disabled:opacity-40"

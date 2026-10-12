@@ -81,7 +81,7 @@ const SimpleUserDashboard = () => {
   ];
 
   useEffect(() => {
-    const timer = setTimeout(() => setShowWelcome(false), 600);
+    const timer = setTimeout(() => setShowWelcome(false), 3000);
     return () => clearTimeout(timer);
   }, []);
 

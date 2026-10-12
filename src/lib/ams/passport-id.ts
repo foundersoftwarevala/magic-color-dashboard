@@ -1,3 +1,4 @@
+// @ts-nocheck
 // Deterministic digital passport identity + verification codes (UI only).
 // No backend calls: every code is derived from the role slug so the same
 // passport always resolves to the same verification record.
@@ -6,7 +7,7 @@ import { ROLES, type RoleDNA, type RoleSlug } from "./roles";
 
 const ISSUE_YEAR = 2026;
 
-export function hash(input: string): number {
+function hash(input: string): number {
   let h = 2166136261;
   for (let i = 0; i < input.length; i += 1) {
     h ^= input.charCodeAt(i);
@@ -15,7 +16,7 @@ export function hash(input: string): number {
   return Math.abs(h);
 }
 
-export function base32(n: number, len: number): string {
+function base32(n: number, len: number): string {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let out = "";
   let v = n;

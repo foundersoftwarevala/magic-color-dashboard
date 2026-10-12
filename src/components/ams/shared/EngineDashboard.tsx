@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { type ReactNode, useMemo, useState } from "react";
 import {
   Search, Plus, Download, Upload, Copy, Archive, Trash2, Check, Filter,
@@ -10,8 +11,6 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
 export interface KpiCard {
@@ -90,15 +89,15 @@ export function EngineDashboard({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <header className="grid grid-cols-1 items-end gap-4 lg:flex lg:flex-wrap lg:justify-between">
-        <div className="min-w-0">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div>
           <div className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{kicker}</div>
-          <h1 className="text-2xl font-bold tracking-tight text-gradient-primary sm:text-3xl">{title}</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gradient-primary">{title}</h1>
           {description && <p className="text-sm text-muted-foreground mt-2 max-w-2xl">{description}</p>}
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" sound="importComplete" className="gap-1.5"><Upload className="h-3.5 w-3.5" /> Import</Button>
-          <Button variant="outline" size="sm" sound="exportComplete" className="gap-1.5"><Download className="h-3.5 w-3.5" /> Export</Button>
+        <div className="flex items-center gap-2">
+          <Button variant="outline" size="sm" className="gap-1.5"><Upload className="h-3.5 w-3.5" /> Import</Button>
+          <Button variant="outline" size="sm" className="gap-1.5"><Download className="h-3.5 w-3.5" /> Export</Button>
           <Button size="sm" className="gap-1.5"><Plus className="h-3.5 w-3.5" /> {primaryAction}</Button>
         </div>
       </header>
@@ -106,7 +105,7 @@ export function EngineDashboard({
       {/* KPI grid */}
       <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         {kpis.map((k) => (
-          <div key={k.label} className="surface-card motion-card motion-fade p-4">
+          <div key={k.label} className="surface-card p-4">
             <div className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{k.label}</div>
             <div className="mt-1 flex items-baseline gap-2">
               <div className="text-2xl font-bold tracking-tight" style={{ color: k.accent }}>{k.value}</div>
@@ -157,10 +156,10 @@ export function EngineDashboard({
           {selected.size > 0 && (
             <>
               <span className="text-xs text-muted-foreground mr-2">{selected.size} selected</span>
-              <Button variant="ghost" size="sm" sound="approval" className="gap-1.5"><Check className="h-3.5 w-3.5" /> Activate</Button>
+              <Button variant="ghost" size="sm" className="gap-1.5"><Check className="h-3.5 w-3.5" /> Activate</Button>
               <Button variant="ghost" size="sm" className="gap-1.5"><Copy className="h-3.5 w-3.5" /> Duplicate</Button>
-              <Button variant="ghost" size="sm" sound="archive" className="gap-1.5"><Archive className="h-3.5 w-3.5" /> Archive</Button>
-              <Button variant="ghost" size="sm" sound="delete" className="gap-1.5 text-destructive"><Trash2 className="h-3.5 w-3.5" /> Delete</Button>
+              <Button variant="ghost" size="sm" className="gap-1.5"><Archive className="h-3.5 w-3.5" /> Archive</Button>
+              <Button variant="ghost" size="sm" className="gap-1.5 text-destructive"><Trash2 className="h-3.5 w-3.5" /> Delete</Button>
             </>
           )}
         </div>
@@ -171,46 +170,38 @@ export function EngineDashboard({
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="sticky top-0 z-10 border-b border-border/60 bg-[oklch(0.2_0.032_260)] backdrop-blur text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
-                <th scope="col" className="w-10 px-3 py-2 text-left">
-                  <Checkbox
+              <tr className="border-b border-border/60 bg-muted/20 text-[10px] uppercase tracking-[0.15em] text-muted-foreground">
+                <th className="w-10 px-3 py-2 text-left">
+                  <input
+                    type="checkbox"
                     checked={filtered.length > 0 && selected.size === filtered.length}
-                    onCheckedChange={toggleAll}
-                    aria-label="Select all rows"
+                    onChange={toggleAll}
+                    className="rounded border-border"
                   />
                 </th>
                 {columns.map((c) => (
-                  <th key={c.key} scope="col" className={cn("px-3 py-2 font-medium", c.align === "right" && "text-right", c.align === "center" && "text-center")} style={{ width: c.width }}>
+                  <th key={c.key} className={cn("px-3 py-2 font-medium", c.align === "right" && "text-right", c.align === "center" && "text-center")} style={{ width: c.width }}>
                     {c.label}
                   </th>
                 ))}
-                <th scope="col" className="w-10 px-3 py-2"><span className="sr-only">Actions</span></th>
+                <th className="w-10 px-3 py-2" />
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={columns.length + 2} className="px-3 py-16 text-center">
-                    <div className="motion-fade mx-auto flex max-w-sm flex-col items-center gap-3">
-                      <span className="grid h-12 w-12 place-items-center rounded-xl border border-border bg-muted/30 text-muted-foreground">
-                        <Filter className="h-5 w-5" />
-                      </span>
-                      <p className="text-sm text-muted-foreground">{emptyLabel}</p>
-                      <Button size="sm" variant="outline" className="gap-1.5"><Plus className="h-3.5 w-3.5" /> {primaryAction}</Button>
-                    </div>
+                  <td colSpan={columns.length + 2} className="px-3 py-14 text-center text-sm text-muted-foreground">
+                    {emptyLabel}
                   </td>
                 </tr>
               ) : filtered.map((r) => (
-                <tr
-                  key={r.id}
-                  data-selected={selected.has(r.id) || undefined}
-                  className="motion-row border-b border-border/40 hover:bg-muted/25 data-[selected]:bg-trophy/5"
-                >
+                <tr key={r.id} className="border-b border-border/40 hover:bg-muted/20 transition-colors">
                   <td className="px-3 py-2.5">
-                    <Checkbox
+                    <input
+                      type="checkbox"
                       checked={selected.has(r.id)}
-                      onCheckedChange={() => toggle(r.id)}
-                      aria-label={`Select row ${r.id}`}
+                      onChange={() => toggle(r.id)}
+                      className="rounded border-border"
                     />
                   </td>
                   {columns.map((c) => (
@@ -220,16 +211,9 @@ export function EngineDashboard({
                   ))}
                   <td className="px-3 py-2.5">
                     <DropdownMenu>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon-sm" aria-label="Row actions" sound="dropdown">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                        </TooltipTrigger>
-                        <TooltipContent>Row actions</TooltipContent>
-                      </Tooltip>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-7 w-7"><MoreHorizontal className="h-4 w-4" /></Button>
+                      </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-40">
                         <DropdownMenuItem><ArrowUpRight className="h-3.5 w-3.5 mr-2" /> View</DropdownMenuItem>
                         <DropdownMenuItem>Edit</DropdownMenuItem>

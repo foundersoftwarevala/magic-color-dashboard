@@ -147,10 +147,24 @@ const TimeWeather = memo(() => {
     return () => clearInterval(t);
   }, []);
 
-  const local = now ? now.toLocaleTimeString([], { hour12: false }) : "--:--:--";
-  const utc = now ? now.toUTCString().slice(17, 25) : "--:--:--";
+  const formatTime = (date: Date, timeZone: string, seconds = false) =>
+    new Intl.DateTimeFormat("en-GB", {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      ...(seconds ? { second: "2-digit" } : {}),
+      hourCycle: "h23",
+    }).format(date);
+  const local = now ? formatTime(now, "Asia/Kolkata", true) : "--:--:--";
+  const utc = now ? formatTime(now, "UTC", true) : "--:--:--";
   const date = now
-    ? now.toLocaleDateString(undefined, { weekday: "short", day: "2-digit", month: "short", year: "numeric" })
+    ? new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Asia/Kolkata",
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      }).format(now)
     : "";
 
   return (
@@ -175,8 +189,8 @@ const TimeWeather = memo(() => {
       <div className="mt-2 grid grid-cols-3 gap-1.5">
         {[
           { k: "UTC", v: utc },
-          { k: "NY", v: now ? new Date(now.getTime() - 5.5 * 36e5 - 4.5 * 36e5).toLocaleTimeString([], { hour12: false }).slice(0, 5) : "--:--" },
-          { k: "LDN", v: now ? new Date(now.getTime() - 4.5 * 36e5).toLocaleTimeString([], { hour12: false }).slice(0, 5) : "--:--" },
+          { k: "NY", v: now ? formatTime(now, "America/New_York") : "--:--" },
+          { k: "LDN", v: now ? formatTime(now, "Europe/London") : "--:--" },
         ].map((c) => (
           <div key={c.k} className="rounded-lg border border-white/8 bg-white/[0.04] px-1.5 py-1 text-center">
             <p className="text-[8.5px] uppercase tracking-wider text-foreground/50">{c.k}</p>

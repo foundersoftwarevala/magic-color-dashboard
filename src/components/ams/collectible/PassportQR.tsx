@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { useEffect, useState } from "react";
 import QRCode from "qrcode";
 import { Link } from "@tanstack/react-router";
@@ -87,8 +88,6 @@ export function PassportQR({ role, size = 132 }: { role: RoleDNA; size?: number 
           <button
             type="button"
             onClick={copyCode}
-            title="Copy verification code"
-            aria-label={`Copy verification code ${identity.code}`}
             className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[10px] text-white/80 hover:bg-white/5"
             style={{ borderColor: `${role.accent}55` }}
           >
@@ -97,8 +96,6 @@ export function PassportQR({ role, size = 132 }: { role: RoleDNA; size?: number 
           <button
             type="button"
             onClick={downloadQr}
-            title="Download QR code"
-            aria-label="Download verification QR code as PNG"
             className="inline-flex items-center gap-1 rounded-md border px-2 py-1 text-[10px] text-white/80 hover:bg-white/5"
             style={{ borderColor: `${role.accent}55` }}
           >

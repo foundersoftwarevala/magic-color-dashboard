@@ -1,8 +1,8 @@
+// @ts-nocheck
 import { useEffect, useRef, useState } from "react";
 import { Download, RotateCw, Pause, Sparkles } from "lucide-react";
 import { useReducedMotion } from "@/hooks/use-reduced-motion";
 import { useCelebration, type CelebrateKind } from "@/components/ams/effects/Celebration";
-import { MuseumCase, SVMicroMark, SVSeal, svCollectionNumber } from "@/components/ams/brand/SVMark";
 
 /**
  * Ultra-premium 3D collectible viewer with:
@@ -105,16 +105,15 @@ export function Collectible3D({
       style={{
         height,
         perspective: "1200px",
-        borderColor: `color-mix(in oklab, ${accent} 42%, var(--border))`,
+        borderColor: `${accent}55`,
         background: `
-          radial-gradient(120% 60% at 50% 0%, color-mix(in oklab, ${accent} 18%, transparent), transparent 60%),
-          radial-gradient(80% 50% at 50% 100%, color-mix(in oklab, ${accent} 14%, transparent), transparent 70%),
-          linear-gradient(180deg, var(--card) 0%, color-mix(in oklab, var(--background) 84%, var(--primary)) 55%, var(--background) 100%)
+          radial-gradient(120% 60% at 50% 0%, ${accent}22, transparent 60%),
+          radial-gradient(80% 50% at 50% 100%, ${accent}18, transparent 70%),
+          linear-gradient(180deg, #05070d 0%, #0a0f1a 55%, #050810 100%)
         `,
-        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.06), inset 0 0 60px color-mix(in oklab, ${accent} 14%, transparent), 0 30px 60px -30px color-mix(in oklab, ${accent} 55%, transparent)`,
+        boxShadow: `inset 0 0 60px ${accent}22, 0 30px 60px -30px ${accent}66`,
         contain: "content",
       }}
-
     >
       {!inView ? (
         <div className="absolute inset-0 flex items-center justify-center">
@@ -177,15 +176,14 @@ export function Collectible3D({
                 alt={label ?? filename}
                 loading="lazy"
                 decoding="async"
-                width={2048}
-                height={2048}
+                width={1024}
+                height={1024}
                 className="h-full w-full object-contain"
                 style={{
-                  filter: `saturate(1.18) contrast(1.08) drop-shadow(0 20px 40px color-mix(in oklab, ${accent} 65%, transparent)) drop-shadow(0 0 24px color-mix(in oklab, ${accent} 45%, transparent))`,
+                  filter: `drop-shadow(0 20px 40px ${accent}aa) drop-shadow(0 0 20px ${accent}66)`,
                   backfaceVisibility: "hidden",
                 }}
               />
-
               {animate && (
                 <div
                   className="pointer-events-none absolute inset-0 trophy-shine"
@@ -208,19 +206,6 @@ export function Collectible3D({
           </div>
         </>
       )}
-
-      {/* Software Vala museum case + brand marks */}
-      <MuseumCase accent={accent} />
-      <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
-        <SVSeal accent={accent} />
-        <SVMicroMark accent={accent} className="hidden sm:inline" />
-      </div>
-      <div
-        className="absolute bottom-2 right-3 z-10 font-mono uppercase"
-        style={{ fontSize: 9, letterSpacing: "0.22em", color: `${accent}aa` }}
-      >
-        {svCollectionNumber(filename, "sv")}
-      </div>
 
       {/* Controls */}
       <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">

@@ -16,7 +16,7 @@
  * GRADE 8: Home, Security, Settings
  */
 
-import { memo, useCallback, useEffect, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { 
@@ -232,37 +232,6 @@ export const ControlPanelSidebar = memo<ControlPanelSidebarProps>(({
   const handleRoleClick = useCallback((roleId: RoleId) => {
     onRoleSelect(roleId);
   }, [onRoleSelect]);
-
-  // Pre-warm every module chunk in the background, a few at a time during idle
-  // time, so a sidebar click renders immediately instead of downloading first.
-  useEffect(() => {
-    const ids = ROLE_CATEGORIES.map((r) => r.id);
-    let i = 0;
-    let timer: number | undefined;
-    const w = window as unknown as {
-      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number;
-      cancelIdleCallback?: (id: number) => void;
-    };
-    let idle: number | undefined;
-
-    const step = () => {
-      ids.slice(i, i + 3).forEach(preloadRoleDashboard);
-      i += 3;
-      if (i >= ids.length) return;
-      schedule(400);
-    };
-    const schedule = (delay: number) => {
-      timer = window.setTimeout(() => {
-        idle = w.requestIdleCallback ? w.requestIdleCallback(step, { timeout: 1500 }) : (window.setTimeout(step, 0) as unknown as number);
-      }, delay);
-    };
-    schedule(1200);
-
-    return () => {
-      if (timer) clearTimeout(timer);
-      if (idle && w.cancelIdleCallback) w.cancelIdleCallback(idle);
-    };
-  }, []);
 
   return (
     <motion.aside

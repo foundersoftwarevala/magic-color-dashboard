@@ -510,7 +510,6 @@ const CountryHeadDashboard = ({ countryCode = "IN", onBack }: CountryHeadDashboa
                           fill="transparent"
                           stroke={getRegionColor(region)}
                           strokeWidth={2}
-                          initial={{ r: 14, opacity: 0.7 }}
                           animate={{ r: [14, 22, 14], opacity: [0.7, 0, 0.7] }}
                           transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
                         />

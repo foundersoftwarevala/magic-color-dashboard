@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { type ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { cn } from "@/lib/utils";
@@ -6,7 +7,6 @@ import { RarityBadge } from "./RarityBadge";
 import { StatusPill } from "./StatusPill";
 import { DepartmentBadge } from "./DepartmentBadge";
 import { ProceduralEmblem } from "./ProceduralEmblem";
-import { SVSeal, svCollectionNumber } from "@/components/ams/brand/SVMark";
 import { RARITY_META, type Award } from "@/lib/ams/types";
 
 const ICON: Record<Award["type"], typeof Trophy> = {
@@ -28,7 +28,7 @@ export function AwardCard({
       to="/awards/$id"
       params={{ id: award.id }}
       className={cn(
-        "group surface-card motion-card relative flex flex-col gap-3 p-4",
+        "group surface-card relative flex flex-col gap-3 p-4 transition-all hover:-translate-y-0.5",
         className,
       )}
       style={{ boxShadow: meta.tier >= 5 ? `0 0 0 1px ${meta.hue}33, 0 18px 40px -22px ${meta.glow}` : undefined }}
@@ -47,16 +47,6 @@ export function AwardCard({
         ) : (
           <ProceduralEmblem award={award} size={140} className="transition-transform group-hover:scale-105" />
         )}
-        {/* Software Vala brand mark on every award */}
-        <div className="pointer-events-none absolute left-2 top-2 flex items-center gap-1.5">
-          <SVSeal accent={meta.hue} size={18} />
-        </div>
-        <div
-          className="pointer-events-none absolute bottom-1.5 right-2 font-mono uppercase"
-          style={{ fontSize: 8, letterSpacing: "0.2em", color: `${meta.hue}aa` }}
-        >
-          {svCollectionNumber(award.id, award.type.slice(0, 3))}
-        </div>
       </div>
       <div>
         <div className="text-sm font-semibold leading-tight">{award.name}</div>

@@ -156,22 +156,6 @@ export function useOutletContext<T = unknown>(): T {
   return React.useContext(OutletContext) as T;
 }
 
-/**
- * Provides the v6 outlet context to a subtree. Layouts merged from the
- * reference project render `<Outlet context={...} />`; when they are used with
- * direct `children` instead, wrap the children in this provider so
- * `useOutletContext()` still resolves.
- */
-export function OutletContextProvider({
-  value,
-  children,
-}: {
-  value: unknown;
-  children: React.ReactNode;
-}) {
-  return <OutletContext.Provider value={value}>{children}</OutletContext.Provider>;
-}
-
 /** Minimal nested `<Routes>/<Route>` support (path + index + splat). */
 export interface RouteProps {
   path?: string;
