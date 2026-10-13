@@ -4,8 +4,12 @@
  */
 
 import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { explainControlCenterAlert } from "@/lib/alert-explainer.functions";
 import {
   Activity,
   AlertTriangle,
@@ -443,19 +447,97 @@ EnterpriseCalculator.displayName = "EnterpriseCalculator";
 
 /* --------------------------- 4. control center ---------------------------- */
 
-const ControlCenter = memo(() => (
-  <Panel icon={Gauge} title="Control Center">
-    <div className="space-y-1">
-      <Row label="System" value="OPERATIONAL" tone="ok" icon={Activity} />
-      <Row label="Servers (12 nodes)" value="ONLINE" tone="ok" icon={Server} />
-      <Row label="Database" value="98% HEALTHY" tone="ok" icon={Database} />
-      <Row label="AI Engine" value="RUNNING" tone="info" icon={Brain} />
-      <Row label="Queue" value="45 JOBS" tone="warn" icon={Terminal} />
-      <Row label="API Gateway" value="132ms" tone="ok" icon={Zap} />
-      <Row label="Security" value="PROTECTED" tone="ok" icon={Shield} />
-    </div>
-  </Panel>
-));
+const ControlCenter = memo(() => {
+  const explainAlert = useServerFn(explainControlCenterAlert);
+  const [isOpen, setIsOpen] = useState(false);
+  const [alert, setAlert] = useState("");
+  const [context, setContext] = useState("");
+  const [explanation, setExplanation] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setError("");
+    setExplanation("");
+    try {
+      const response = await explainAlert({ data: { alert, context } });
+      if (!response.ok) {
+        setError(response.error);
+        return;
+      }
+      setExplanation(response.explanation);
+    } catch {
+      setError("The explanation could not be generated. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Panel icon={Gauge} title="Control Center">
+      <div className="space-y-1">
+        <Row label="System" value="OPERATIONAL" tone="ok" icon={Activity} />
+        <Row label="Servers (12 nodes)" value="ONLINE" tone="ok" icon={Server} />
+        <Row label="Database" value="98% HEALTHY" tone="ok" icon={Database} />
+        <Row label="AI Engine" value="RUNNING" tone="info" icon={Brain} />
+        <Row label="Queue" value="45 JOBS" tone="warn" icon={Terminal} />
+        <Row label="API Gateway" value="132ms" tone="ok" icon={Zap} />
+        <Row label="Security" value="PROTECTED" tone="ok" icon={Shield} />
+      </div>
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        className="mt-2 h-8 w-full justify-start border-primary/30 bg-primary/10 text-foreground hover:bg-primary/20"
+        onClick={() => setIsOpen((open) => !open)}
+        aria-expanded={isOpen}
+      >
+        <Brain className="h-3.5 w-3.5 text-primary-glow" />
+        {isOpen ? "Close alert explainer" : "Explain an alert with AI"}
+      </Button>
+      {isOpen && (
+        <form className="mt-2 space-y-2" onSubmit={handleSubmit}>
+          <label className="block space-y-1 text-[10px] font-semibold text-foreground/75">
+            <span>Alert</span>
+            <Textarea
+              value={alert}
+              onChange={(event) => setAlert(event.target.value)}
+              placeholder="For example: Node-07 CPU has stayed above 90% for 10 minutes"
+              maxLength={2000}
+              required
+              minLength={3}
+              className="min-h-16 resize-y border-white/10 bg-black/20 text-xs placeholder:text-foreground/35"
+            />
+          </label>
+          <label className="block space-y-1 text-[10px] font-semibold text-foreground/75">
+            <span>Dashboard context</span>
+            <Textarea
+              value={context}
+              onChange={(event) => setContext(event.target.value)}
+              placeholder="Add related metrics, recent changes, affected services, and timeframe"
+              maxLength={6000}
+              required
+              minLength={10}
+              className="min-h-20 resize-y border-white/10 bg-black/20 text-xs placeholder:text-foreground/35"
+            />
+          </label>
+          <Button type="submit" size="sm" disabled={isLoading} className="h-8 w-full">
+            {isLoading ? "Analyzing…" : "Analyze alert"}
+          </Button>
+          {error && <p role="alert" className="text-xs text-rose-300">{error}</p>}
+          {explanation && (
+            <div aria-live="polite" className="max-h-72 space-y-1 overflow-y-auto rounded-lg border border-primary/25 bg-black/20 p-2.5">
+              <p className="text-[10px] font-bold uppercase tracking-wider text-primary-glow">AI assessment</p>
+              <p className="whitespace-pre-wrap text-xs leading-relaxed text-foreground/85">{explanation}</p>
+            </div>
+          )}
+        </form>
+      )}
+    </Panel>
+  );
+});
 ControlCenter.displayName = "ControlCenter";
 
 /* ---------------------------- 5. notifications ---------------------------- */
