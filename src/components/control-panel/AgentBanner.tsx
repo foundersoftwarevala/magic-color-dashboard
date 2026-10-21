@@ -60,6 +60,7 @@ const swatch = (look: Look, kind: "primary" | "accent") => {
 export function AgentBanner() {
   const [selected, setSelected] = useState("auto");
   const look = selected === "auto" ? AUTO : LOOKS.find((l) => l.key === selected) ?? AUTO;
+  const isAuto = selected === "auto";
   const accent = swatch(look, "accent");
   const primary = swatch(look, "primary");
 
