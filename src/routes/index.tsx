@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
+import { SliderBanner } from "@/components/slider-banner/SliderBanner";
 import { AgentBanner } from "@/components/control-panel/AgentBanner";
 import { RoleDashboard, preloadRoleDashboard } from "@/components/super-admin-wireframe/roleDashboards";
 
