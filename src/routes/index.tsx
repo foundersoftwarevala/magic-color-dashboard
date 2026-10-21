@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
 import { SliderBanner } from "@/components/slider-banner/SliderBanner";
-import { BannerThemeControls } from "@/components/slider-banner/BannerThemeControls";
+import { AgentBanner } from "@/components/control-panel/AgentBanner";
 import { RoleDashboard, preloadRoleDashboard } from "@/components/super-admin-wireframe/roleDashboards";
 
 
@@ -155,6 +155,7 @@ const KPI_BOXES: Kpi[] = [
 function CockpitBanner() {
   return (
     <section className="flex flex-col gap-4">
+      <AgentBanner />
       <PageBanner
         eyebrow="Software Vala"
         title="Master Control Panel"
@@ -169,8 +170,6 @@ function CockpitBanner() {
           { label: "Uptime", value: "99.9%" },
         ]}
       />
-      <BannerThemeControls />
-      <SliderBanner />
     </section>
   );
 }
