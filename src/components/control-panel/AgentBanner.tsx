@@ -7,32 +7,33 @@
 import { useState } from "react";
 import { Activity, Sparkles } from "lucide-react";
 
-import ayraAuto from "@/assets/ayra/ayra-command-cutout.png";
-import ayraDefault from "@/assets/ayra/ayra-cyan.jpg";
-import ayraCyanSide from "@/assets/ayra/ayra-cyan-side.jpg";
-import ayraCyanJacket from "@/assets/ayra/ayra-cyan-jacket.jpg";
-import ayraBraids from "@/assets/ayra/ayra-braids.jpg";
-import ayraAmberSide from "@/assets/ayra/ayra-amber-side.jpg";
-import ayraAmberFront from "@/assets/ayra/ayra-amber-front.jpg";
-import ayraAmberProfile from "@/assets/ayra/ayra-amber-profile.jpg";
-import ayraViolet from "@/assets/ayra/ayra-violet.jpg";
-import ayraHeadset from "@/assets/ayra/ayra-headset.jpg";
-import ayraGold from "@/assets/ayra/ayra-gold.jpg";
-import ayraBob from "@/assets/ayra/ayra-bob.jpg";
-import ayraCrystal from "@/assets/ayra/ayra-crystal.jpg";
-import ayraVeil from "@/assets/ayra/ayra-veil.jpg";
-import ayraCinematic from "@/assets/ayra/ayra-cinematic.jpg";
+import ayraAutoPassport from "@/assets/ayra/ayra-command-cutout-passport.png";
+import ayraDefault from "@/assets/ayra/ayra-cyan-passport.jpg";
+import ayraCyanSide from "@/assets/ayra/ayra-cyan-side-passport.jpg";
+import ayraCyanJacket from "@/assets/ayra/ayra-cyan-jacket-passport.jpg";
+import ayraBraids from "@/assets/ayra/ayra-braids-passport.jpg";
+import ayraAmberSide from "@/assets/ayra/ayra-amber-side-passport.jpg";
+import ayraAmberFront from "@/assets/ayra/ayra-amber-front-passport.jpg";
+import ayraAmberProfile from "@/assets/ayra/ayra-amber-profile-passport.jpg";
+import ayraViolet from "@/assets/ayra/ayra-violet-passport.jpg";
+import ayraHeadset from "@/assets/ayra/ayra-headset-passport.jpg";
+import ayraGold from "@/assets/ayra/ayra-gold-passport.jpg";
+import ayraBob from "@/assets/ayra/ayra-bob-passport.jpg";
+import ayraCrystal from "@/assets/ayra/ayra-crystal-passport.jpg";
+import ayraVeil from "@/assets/ayra/ayra-veil-passport.jpg";
+import ayraCinematic from "@/assets/ayra/ayra-cinematic-passport.jpg";
 
 interface Look {
   key: string;
   name: string;
+  /** Passport-style face crop used everywhere in the banner. */
   img: string;
   hue: number;
   chroma?: number;
 }
 
-/** Auto mode shows the command-cutout, exactly like the repo's default core. */
-const AUTO: Look = { key: "auto", name: "Auto", img: ayraAuto, hue: 235, chroma: 0.17 };
+/** Auto mode shows the command-cutout's passport face crop. */
+const AUTO: Look = { key: "auto", name: "Auto", img: ayraAutoPassport, hue: 235, chroma: 0.17 };
 
 /** Every agent look shipped in the reference repo, with its dress glow hue. */
 const LOOKS: Look[] = [
@@ -111,7 +112,7 @@ export function AgentBanner() {
           </p>
         </div>
 
-        {/* Featured avatar — cutout in auto, selected photo otherwise */}
+        {/* Featured avatar — passport-style face photo sized to the space */}
         <div className="relative min-h-[280px] overflow-hidden md:min-h-[340px]">
           <img
             key={look.key}
@@ -119,10 +120,14 @@ export function AgentBanner() {
             alt={`AYRA — ${look.name}`}
             className={
               isAuto
-                ? "absolute inset-0 h-full w-full object-contain object-bottom p-4"
-                : "absolute inset-0 h-full w-full object-cover object-top"
+                ? "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full w-auto object-contain"
+                : "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-[88%] object-cover object-top rounded-t-2xl border-x border-t border-white/10"
             }
-            style={isAuto ? { filter: `drop-shadow(0 0 22px color-mix(in oklab, ${accent} 45%, transparent))` } : undefined}
+            style={
+              isAuto
+                ? { filter: `drop-shadow(0 0 22px color-mix(in oklab, ${accent} 45%, transparent))` }
+                : { boxShadow: `0 0 34px color-mix(in oklab, ${accent} 30%, transparent)`, borderTopColor: `color-mix(in oklab, ${accent} 40%, transparent)` }
+            }
           />
           {/* base shade, like the repo ayra-banner-shade */}
           <div
