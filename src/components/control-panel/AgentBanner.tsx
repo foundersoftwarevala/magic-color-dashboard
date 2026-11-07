@@ -22,6 +22,9 @@ import ayraBob from "@/assets/ayra/ayra-bob-passport.jpg";
 import ayraCrystal from "@/assets/ayra/ayra-crystal-passport.jpg";
 import ayraVeil from "@/assets/ayra/ayra-veil-passport.jpg";
 import ayraCinematic from "@/assets/ayra/ayra-cinematic-passport.jpg";
+import ayraZinraPrism from "@/assets/ayra/ayra-zinra-prism.jpg.asset.json";
+import ayraZinraVeil from "@/assets/ayra/ayra-zinra-veil.jpg.asset.json";
+import ayraZinraHeadset from "@/assets/ayra/ayra-zinra-headset.jpg.asset.json";
 
 interface Look {
   key: string;
@@ -51,6 +54,9 @@ const LOOKS: Look[] = [
   { key: "crystal", name: "Purple Crystal", img: ayraCrystal, hue: 310 },
   { key: "veil", name: "Bridal Veil", img: ayraVeil, hue: 215 },
   { key: "cinematic", name: "Cinematic", img: ayraCinematic, hue: 285 },
+  { key: "zinraPrism", name: "Zinra Prism", img: ayraZinraPrism.url, hue: 205 },
+  { key: "zinraVeil", name: "Zinra Veil", img: ayraZinraVeil.url, hue: 215 },
+  { key: "zinraHeadset", name: "Zinra Headset", img: ayraZinraHeadset.url, hue: 195 },
 ];
 
 const swatch = (look: Look, kind: "primary" | "accent") => {
