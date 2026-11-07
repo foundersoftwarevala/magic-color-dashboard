@@ -58,6 +58,57 @@ const swatch = (look: Look, kind: "primary" | "accent") => {
   return `oklch(${kind === "accent" ? 0.82 : 0.72} ${c.toFixed(3)} ${look.hue})`;
 };
 
+/** Live electric arcs + sparks around the avatar so the robot feels active. */
+function ElectricAura({ color }: { color: string }) {
+  const bolts = [
+    "M150 20 L138 70 L156 92 L134 150 L150 175 L128 240",
+    "M330 40 L346 96 L326 120 L352 180 L330 210 L348 270",
+    "M180 300 L210 286 L232 304 L262 288 L290 306",
+    "M120 120 L96 140 L112 160 L84 186",
+    "M360 130 L384 150 L368 172 L396 196",
+  ];
+  const sparks = Array.from({ length: 14 }, (_, i) => ({
+    x: 90 + ((i * 53) % 320),
+    y: 30 + ((i * 89) % 280),
+    d: (i * 0.37) % 2.4,
+  }));
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-[1] flex justify-center">
+      <style>{`
+        @keyframes ayraBolt{0%,100%{opacity:0}4%{opacity:1}7%{opacity:.2}10%{opacity:.95}16%{opacity:0}}
+        @keyframes ayraSpark{0%{opacity:0;transform:translate(0,0) scale(.4)}20%{opacity:1;transform:scale(1.2)}100%{opacity:0;transform:translate(6px,-22px) scale(.2)}}
+        @keyframes ayraPulse{0%,100%{opacity:.35}50%{opacity:.8}}
+        @keyframes ayraScan{0%{transform:translateY(-100%)}100%{transform:translateY(400%)}}
+        @media (prefers-reduced-motion: reduce){.ayra-fx *{animation:none!important}}
+      `}</style>
+      <svg className="ayra-fx h-full w-auto" viewBox="0 0 480 340" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="ayraGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="b" />
+            <feMerge><feMergeNode in="b" /><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+        <ellipse cx="240" cy="170" rx="150" ry="165" fill="none" stroke={color} strokeWidth="1.5"
+          style={{ animation: "ayraPulse 2.2s ease-in-out infinite" }} filter="url(#ayraGlow)" />
+        {bolts.map((d, i) => (
+          <g key={i} style={{ animation: `ayraBolt ${2.6 + i * 0.7}s linear ${i * 0.9}s infinite`, opacity: 0 }} filter="url(#ayraGlow)">
+            <path d={d} fill="none" stroke={color} strokeWidth="2.4" strokeLinejoin="round" />
+            <path d={d} fill="none" stroke="white" strokeWidth="0.9" strokeLinejoin="round" />
+          </g>
+        ))}
+        {sparks.map((s, i) => (
+          <circle key={i} cx={s.x} cy={s.y} r="2" fill="white" filter="url(#ayraGlow)"
+            style={{ transformBox: "fill-box", animation: `ayraSpark 1.8s ease-out ${s.d}s infinite`, opacity: 0, color }} stroke={color} strokeWidth="1" />
+        ))}
+      </svg>
+      <div className="absolute inset-x-0 top-0 h-1/4" style={{
+        background: `linear-gradient(180deg, transparent, color-mix(in oklab, ${color} 18%, transparent), transparent)`,
+        animation: "ayraScan 3.5s linear infinite",
+      }} />
+    </div>
+  );
+}
+
 export function AgentBanner() {
   const [selected, setSelected] = useState("auto");
   const look = selected === "auto" ? AUTO : LOOKS.find((l) => l.key === selected) ?? AUTO;
@@ -101,7 +152,7 @@ export function AgentBanner() {
           </p>
           <p aria-live="polite" className="flex items-center gap-1.5 text-xs text-white/60">
             <Activity className="h-3 w-3" style={{ color: accent }} />
-            Standing by
+            Active · Online
           </p>
           <span className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] tracking-widest" style={{ color: accent }}>
             <Sparkles className="h-3 w-3" />
@@ -120,8 +171,8 @@ export function AgentBanner() {
             alt={`AYRA — ${look.name}`}
             className={
               isAuto
-                ? "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full w-auto object-contain"
-                : "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-[88%] object-cover object-top rounded-t-2xl border-x border-t border-white/10"
+                ? "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full aspect-[3/4] object-contain"
+                : "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full aspect-[3/4] object-cover object-top rounded-t-2xl border-x border-t border-white/10"
             }
             style={
               isAuto
@@ -129,6 +180,7 @@ export function AgentBanner() {
                 : { boxShadow: `0 0 34px color-mix(in oklab, ${accent} 30%, transparent)`, borderTopColor: `color-mix(in oklab, ${accent} 40%, transparent)` }
             }
           />
+          <ElectricAura color={accent} />
           {/* base shade, like the repo ayra-banner-shade */}
           <div
             aria-hidden
