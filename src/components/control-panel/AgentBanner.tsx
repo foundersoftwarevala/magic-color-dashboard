@@ -152,7 +152,7 @@ export function AgentBanner() {
           </p>
           <p aria-live="polite" className="flex items-center gap-1.5 text-xs text-white/60">
             <Activity className="h-3 w-3" style={{ color: accent }} />
-            Standing by
+            Active · Online
           </p>
           <span className="mt-1 inline-flex w-fit items-center gap-1.5 rounded-full border border-white/15 bg-white/5 px-3 py-1 font-mono text-[10px] tracking-widest" style={{ color: accent }}>
             <Sparkles className="h-3 w-3" />
@@ -171,8 +171,8 @@ export function AgentBanner() {
             alt={`AYRA — ${look.name}`}
             className={
               isAuto
-                ? "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full w-auto object-contain"
-                : "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full w-auto max-w-[88%] object-cover object-top rounded-t-2xl border-x border-t border-white/10"
+                ? "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full aspect-[3/4] object-contain"
+                : "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full aspect-[3/4] object-cover object-top rounded-t-2xl border-x border-t border-white/10"
             }
             style={
               isAuto
