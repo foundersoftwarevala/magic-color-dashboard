@@ -125,13 +125,20 @@ export function AgentBanner() {
   return (
     <section
       aria-label="AYRA agent banner"
-      className="relative overflow-hidden rounded-2xl border border-border"
+      className="ayra-banner @container relative overflow-hidden rounded-2xl border border-border"
       style={{
         background: "oklch(0.16 0.035 240)",
         backgroundImage:
           "radial-gradient(60% 90% at 78% 20%, color-mix(in oklab, " + accent + " 22%, transparent), transparent), radial-gradient(45% 70% at 8% 85%, color-mix(in oklab, " + primary + " 16%, transparent), transparent)",
       }}
     >
+      <style>{`
+        @container (max-width: 480px) {
+          .ayra-banner-content { grid-template-columns: minmax(0, 1fr); }
+          .ayra-banner-identity { display: none; }
+          .ayra-banner-featured { aspect-ratio: 3 / 4; min-height: 0; }
+        }
+      `}</style>
       {/* faint technical grid, like the reference scene floor */}
       <div
         aria-hidden
@@ -144,9 +151,9 @@ export function AgentBanner() {
         }}
       />
 
-      <div className="relative grid items-stretch gap-0 md:grid-cols-[minmax(220px,.9fr)_minmax(0,1.1fr)]">
+      <div className="ayra-banner-content relative grid items-stretch gap-0 md:grid-cols-[minmax(220px,.9fr)_minmax(0,1.1fr)]">
         {/* Identity — mirrors the repo hero-identity column */}
-        <div className="hidden min-w-0 flex-col justify-center gap-2 p-6 min-[481px]:flex md:p-8">
+        <div className="ayra-banner-identity flex min-w-0 flex-col justify-center gap-2 p-6 md:p-8">
           <p
             className="font-mono text-4xl font-black leading-none tracking-[0.3em] md:text-5xl"
             style={{ color: primary, textShadow: `0 0 18px color-mix(in oklab, ${accent} 55%, transparent)` }}
@@ -170,7 +177,7 @@ export function AgentBanner() {
         </div>
 
         {/* Featured avatar — passport-style face photo sized to the space */}
-        <div className="relative aspect-[3/4] min-h-[220px] overflow-hidden min-[481px]:aspect-auto md:min-h-[340px]">
+        <div className="ayra-banner-featured relative min-h-[280px] overflow-hidden md:min-h-[340px]">
           <img
             key={look.key}
             src={look.img}
