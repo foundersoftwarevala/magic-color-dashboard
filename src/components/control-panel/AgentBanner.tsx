@@ -22,9 +22,9 @@ import ayraBob from "@/assets/ayra/ayra-bob-passport.jpg";
 import ayraCrystal from "@/assets/ayra/ayra-crystal-passport.jpg";
 import ayraVeil from "@/assets/ayra/ayra-veil-passport.jpg";
 import ayraCinematic from "@/assets/ayra/ayra-cinematic-passport.jpg";
-import ayraZinraPrism from "@/assets/ayra/ayra-zinra-prism.jpg.asset.json";
-import ayraZinraVeil from "@/assets/ayra/ayra-zinra-veil.jpg.asset.json";
-import ayraZinraHeadset from "@/assets/ayra/ayra-zinra-headset.jpg.asset.json";
+import ayraZinraPrism from "@/assets/ayra/ayra-zinra-prism-uniform.jpg.asset.json";
+import ayraZinraVeil from "@/assets/ayra/ayra-zinra-veil-uniform.jpg.asset.json";
+import ayraZinraHeadset from "@/assets/ayra/ayra-zinra-headset-uniform.jpg.asset.json";
 
 interface Look {
   key: string;
@@ -146,7 +146,7 @@ export function AgentBanner() {
 
       <div className="relative grid items-stretch gap-0 md:grid-cols-[minmax(220px,.9fr)_minmax(0,1.1fr)]">
         {/* Identity — mirrors the repo hero-identity column */}
-        <div className="flex min-w-0 flex-col justify-center gap-2 p-6 md:p-8">
+        <div className="hidden min-w-0 flex-col justify-center gap-2 p-6 min-[481px]:flex md:p-8">
           <p
             className="font-mono text-4xl font-black leading-none tracking-[0.3em] md:text-5xl"
             style={{ color: primary, textShadow: `0 0 18px color-mix(in oklab, ${accent} 55%, transparent)` }}
@@ -170,20 +170,16 @@ export function AgentBanner() {
         </div>
 
         {/* Featured avatar — passport-style face photo sized to the space */}
-        <div className="relative min-h-[280px] overflow-hidden md:min-h-[340px]">
+        <div className="relative aspect-[3/4] min-h-[220px] overflow-hidden min-[481px]:aspect-auto md:min-h-[340px]">
           <img
             key={look.key}
             src={look.img}
             alt={`AYRA — ${look.name}`}
-            className={
-              isAuto
-                ? "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full aspect-[3/4] object-contain"
-                : "absolute inset-y-0 left-1/2 -translate-x-1/2 h-full aspect-[3/4] object-cover object-top rounded-t-2xl border-x border-t border-white/10"
-            }
+            className="absolute inset-0 h-full w-full object-cover object-[50%_35%]"
             style={
               isAuto
                 ? { filter: `drop-shadow(0 0 22px color-mix(in oklab, ${accent} 45%, transparent))` }
-                : { boxShadow: `0 0 34px color-mix(in oklab, ${accent} 30%, transparent)`, borderTopColor: `color-mix(in oklab, ${accent} 40%, transparent)` }
+                : { boxShadow: `0 0 34px color-mix(in oklab, ${accent} 30%, transparent)` }
             }
           />
           <ElectricAura color={accent} />
@@ -197,8 +193,8 @@ export function AgentBanner() {
       </div>
 
       {/* Look strip — every agent look, tap to switch */}
-      <div className="relative border-t border-white/10 bg-black/30 px-3 py-2.5">
-        <div className="flex items-center gap-2 overflow-x-auto pb-0.5">
+        <div className="relative border-t border-white/10 bg-black/30 px-3 py-2.5">
+        <div className="flex touch-pan-x items-center gap-2 overflow-x-auto pb-0.5">
           <button
             key={AUTO.key}
             onClick={() => setSelected("auto")}
