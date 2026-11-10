@@ -48,12 +48,12 @@ const LOOKS: Look[] = [
   { key: "braids", name: "Cyan Braids", img: ayraBraids, hue: 220, imagePosition: "50% 43%", faceScale: 1.04 },
   { key: "headset", name: "Headset", img: ayraHeadset, hue: 240, imagePosition: "50% 42%", faceScale: 0.98 },
   { key: "amberProfile", name: "Amber Glow", img: ayraAmberProfile, hue: 55, imagePosition: "53% 43%", faceScale: 0.92 },
-  { key: "amberFront", name: "Amber Armor", img: ayraAmberFront, hue: 65, imagePosition: "52% 42%", faceScale: 1.4 },
-  { key: "amberSide", name: "Amber Side", img: ayraAmberSide, hue: 60, imagePosition: "50% 43%", faceScale: 1.2 },
+  { key: "amberFront", name: "Amber Armor", img: ayraAmberFront, hue: 65, imagePosition: "50% 52%", faceScale: 1 },
+  { key: "amberSide", name: "Amber Side", img: ayraAmberSide, hue: 60, imagePosition: "50% 43%", faceScale: 1.08 },
   { key: "gold", name: "Gold Headpiece", img: ayraGold, hue: 85, chroma: 0.14, imagePosition: "50% 42%", faceScale: 1.1 },
   { key: "bob", name: "Orange Bob", img: ayraBob, hue: 45, imagePosition: "53% 42%", faceScale: 0.98 },
   { key: "violet", name: "Violet Chrome", img: ayraViolet, hue: 300, imagePosition: "51% 43%", faceScale: 1.14 },
-  { key: "crystal", name: "Purple Crystal", img: ayraCrystal, hue: 310, imagePosition: "49% 42%", faceScale: 1.24 },
+  { key: "crystal", name: "Purple Crystal", img: ayraCrystal, hue: 310, imagePosition: "49% 42%", faceScale: 1.1 },
   { key: "veil", name: "Bridal Veil", img: ayraVeil, hue: 215, imagePosition: "50% 42%", faceScale: 1.12 },
   { key: "cinematic", name: "Cinematic", img: ayraCinematic, hue: 285, imagePosition: "50% 40%", faceScale: 0.86 },
   { key: "zinraPrism", name: "Zinra Prism", img: ayraZinraPrism.url, hue: 205, imagePosition: "50% 42%", faceScale: 0.92 },
@@ -242,7 +242,7 @@ export function AgentBanner() {
                   src={l.img}
                   alt={l.name}
                   className="h-14 w-11 object-cover transition group-hover:scale-105"
-                  style={portraitStyle(l)}
+                  style={{ objectPosition: l.imagePosition ?? "50% 42%" }}
                 />
                 <span className="absolute inset-x-0 bottom-0 truncate bg-black/60 px-1 py-0.5 text-center font-mono text-[7px] uppercase tracking-wider text-white/85">
                   {l.name}
