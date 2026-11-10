@@ -33,31 +33,39 @@ interface Look {
   img: string;
   hue: number;
   chroma?: number;
+  imagePosition?: string;
+  faceScale?: number;
 }
 
 /** Auto mode shows the command-cutout's passport face crop. */
-const AUTO: Look = { key: "auto", name: "Auto", img: ayraAutoPassport, hue: 235, chroma: 0.17 };
+const AUTO: Look = { key: "auto", name: "Auto", img: ayraAutoPassport, hue: 235, chroma: 0.17, imagePosition: "50% 42%", faceScale: 1.02 };
 
 /** Every agent look shipped in the reference repo, with its dress glow hue. */
 const LOOKS: Look[] = [
-  { key: "default", name: "Cyan Classic", img: ayraDefault, hue: 235 },
-  { key: "cyanSide", name: "Cyan Profile", img: ayraCyanSide, hue: 230 },
-  { key: "cyanJacket", name: "Cyan Jacket", img: ayraCyanJacket, hue: 225 },
-  { key: "braids", name: "Cyan Braids", img: ayraBraids, hue: 220 },
-  { key: "headset", name: "Headset", img: ayraHeadset, hue: 240 },
-  { key: "amberProfile", name: "Amber Glow", img: ayraAmberProfile, hue: 55 },
-  { key: "amberFront", name: "Amber Armor", img: ayraAmberFront, hue: 65 },
-  { key: "amberSide", name: "Amber Side", img: ayraAmberSide, hue: 60 },
-  { key: "gold", name: "Gold Headpiece", img: ayraGold, hue: 85, chroma: 0.14 },
-  { key: "bob", name: "Orange Bob", img: ayraBob, hue: 45 },
-  { key: "violet", name: "Violet Chrome", img: ayraViolet, hue: 300 },
-  { key: "crystal", name: "Purple Crystal", img: ayraCrystal, hue: 310 },
-  { key: "veil", name: "Bridal Veil", img: ayraVeil, hue: 215 },
-  { key: "cinematic", name: "Cinematic", img: ayraCinematic, hue: 285 },
-  { key: "zinraPrism", name: "Zinra Prism", img: ayraZinraPrism.url, hue: 205 },
-  { key: "zinraVeil", name: "Zinra Veil", img: ayraZinraVeil.url, hue: 215 },
-  { key: "zinraHeadset", name: "Zinra Headset", img: ayraZinraHeadset.url, hue: 195 },
+  { key: "default", name: "Cyan Classic", img: ayraDefault, hue: 235, imagePosition: "50% 43%", faceScale: 1 },
+  { key: "cyanSide", name: "Cyan Profile", img: ayraCyanSide, hue: 230, imagePosition: "50% 43%", faceScale: 0.94 },
+  { key: "cyanJacket", name: "Cyan Jacket", img: ayraCyanJacket, hue: 225, imagePosition: "50% 42%", faceScale: 1.08 },
+  { key: "braids", name: "Cyan Braids", img: ayraBraids, hue: 220, imagePosition: "50% 43%", faceScale: 1.04 },
+  { key: "headset", name: "Headset", img: ayraHeadset, hue: 240, imagePosition: "50% 42%", faceScale: 0.98 },
+  { key: "amberProfile", name: "Amber Glow", img: ayraAmberProfile, hue: 55, imagePosition: "53% 43%", faceScale: 0.92 },
+  { key: "amberFront", name: "Amber Armor", img: ayraAmberFront, hue: 65, imagePosition: "50% 52%", faceScale: 1 },
+  { key: "amberSide", name: "Amber Side", img: ayraAmberSide, hue: 60, imagePosition: "50% 43%", faceScale: 1.08 },
+  { key: "gold", name: "Gold Headpiece", img: ayraGold, hue: 85, chroma: 0.14, imagePosition: "50% 42%", faceScale: 1.1 },
+  { key: "bob", name: "Orange Bob", img: ayraBob, hue: 45, imagePosition: "53% 42%", faceScale: 0.98 },
+  { key: "violet", name: "Violet Chrome", img: ayraViolet, hue: 300, imagePosition: "51% 43%", faceScale: 1.14 },
+  { key: "crystal", name: "Purple Crystal", img: ayraCrystal, hue: 310, imagePosition: "49% 42%", faceScale: 1.1 },
+  { key: "veil", name: "Bridal Veil", img: ayraVeil, hue: 215, imagePosition: "50% 42%", faceScale: 1.12 },
+  { key: "cinematic", name: "Cinematic", img: ayraCinematic, hue: 285, imagePosition: "50% 40%", faceScale: 0.86 },
+  { key: "zinraPrism", name: "Zinra Prism", img: ayraZinraPrism.url, hue: 205, imagePosition: "50% 42%", faceScale: 0.92 },
+  { key: "zinraVeil", name: "Zinra Veil", img: ayraZinraVeil.url, hue: 215, imagePosition: "50% 42%", faceScale: 0.92 },
+  { key: "zinraHeadset", name: "Zinra Headset", img: ayraZinraHeadset.url, hue: 195, imagePosition: "50% 42%", faceScale: 0.92 },
 ];
+
+const portraitStyle = (look: Look) => ({
+  objectPosition: look.imagePosition ?? "50% 42%",
+  transform: `scale(${look.faceScale ?? 1})`,
+  transformOrigin: "center center",
+});
 
 const swatch = (look: Look, kind: "primary" | "accent") => {
   const c = (look.chroma ?? 0.17) * (kind === "accent" ? 0.85 : 1);
@@ -183,11 +191,12 @@ export function AgentBanner() {
             src={look.img}
             alt={`AYRA — ${look.name}`}
             className="absolute inset-0 h-full w-full object-cover object-[50%_35%]"
-            style={
-              isAuto
+            style={{
+              ...portraitStyle(look),
+              ...(isAuto
                 ? { filter: `drop-shadow(0 0 22px color-mix(in oklab, ${accent} 45%, transparent))` }
-                : { boxShadow: `0 0 34px color-mix(in oklab, ${accent} 30%, transparent)` }
-            }
+                : { boxShadow: `0 0 34px color-mix(in oklab, ${accent} 30%, transparent)` }),
+            }}
           />
           <ElectricAura color={accent} />
           {/* base shade, like the repo ayra-banner-shade */}
@@ -232,7 +241,8 @@ export function AgentBanner() {
                 <img
                   src={l.img}
                   alt={l.name}
-                  className="h-14 w-11 object-cover object-top transition group-hover:scale-105"
+                  className="h-14 w-11 object-cover transition group-hover:scale-105"
+                  style={{ objectPosition: l.imagePosition ?? "50% 42%" }}
                 />
                 <span className="absolute inset-x-0 bottom-0 truncate bg-black/60 px-1 py-0.5 text-center font-mono text-[7px] uppercase tracking-wider text-white/85">
                   {l.name}
