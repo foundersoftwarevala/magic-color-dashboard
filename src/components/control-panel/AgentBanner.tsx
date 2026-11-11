@@ -145,6 +145,7 @@ export function AgentBanner() {
           .ayra-banner-content { grid-template-columns: minmax(0, 1fr); }
           .ayra-banner-identity { display: none; }
           .ayra-banner-featured { aspect-ratio: 3 / 4; min-height: 0; }
+          .ayra-featured-portrait { transform: scale(1.45) !important; transform-origin: 50% 38% !important; }
         }
       `}</style>
       {/* faint technical grid, like the reference scene floor */}
@@ -190,7 +191,7 @@ export function AgentBanner() {
             key={look.key}
             src={look.img}
             alt={`AYRA — ${look.name}`}
-            className="absolute inset-0 h-full w-full object-cover object-[50%_35%]"
+            className="ayra-featured-portrait absolute inset-0 h-full w-full object-cover object-[50%_35%]"
             style={{
               ...portraitStyle(look),
               ...(isAuto
