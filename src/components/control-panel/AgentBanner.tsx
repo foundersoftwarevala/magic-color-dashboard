@@ -179,7 +179,7 @@ export function AgentBanner() {
                   src={l.img}
                   alt={l.name}
                   className="h-14 w-11 object-cover transition group-hover:scale-105"
-                  style={{ objectPosition: l.imagePosition ?? "50% 42%" }}
+                  style={portraitStyle(l)}
                 />
                 <span className="absolute inset-x-0 bottom-0 truncate bg-black/60 px-1 py-0.5 text-center font-mono text-[7px] uppercase tracking-wider text-white/85">
                   {l.name}
