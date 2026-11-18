@@ -33,39 +33,44 @@ interface Look {
   img: string;
   hue: number;
   chroma?: number;
-  imagePosition?: string;
-  faceScale?: number;
+  /** Normalized face-box center and width, measured from this portrait. */
+  faceCenter: [number, number];
+  faceWidth: number;
 }
 
 /** Auto mode shows the command-cutout's passport face crop. */
-const AUTO: Look = { key: "auto", name: "Auto", img: ayraAutoPassport, hue: 235, chroma: 0.17, imagePosition: "50% 42%", faceScale: 1.02 };
+const AUTO: Look = { key: "auto", name: "Auto", img: ayraAutoPassport, hue: 235, chroma: 0.17, faceCenter: [0.293, 0.408], faceWidth: 0.433 };
+
+/** A shared visual face width, with per-image measured scale and alignment. */
+const portraitStyle = (look: Look) => {
+  const [faceX, faceY] = look.faceCenter;
+  const scale = 0.72 / look.faceWidth;
+  return {
+    transform: `translate(calc(-50% + ${(0.5 - faceX) * scale * 100}%), calc(-50% + ${(0.5 - faceY) * scale * 100}%)) scale(${scale})`,
+    transformOrigin: "center center",
+  };
+};
 
 /** Every agent look shipped in the reference repo, with its dress glow hue. */
 const LOOKS: Look[] = [
-  { key: "default", name: "Cyan Classic", img: ayraDefault, hue: 235, imagePosition: "50% 43%", faceScale: 1 },
-  { key: "cyanSide", name: "Cyan Profile", img: ayraCyanSide, hue: 230, imagePosition: "50% 43%", faceScale: 0.94 },
-  { key: "cyanJacket", name: "Cyan Jacket", img: ayraCyanJacket, hue: 225, imagePosition: "50% 42%", faceScale: 1.08 },
-  { key: "braids", name: "Cyan Braids", img: ayraBraids, hue: 220, imagePosition: "50% 43%", faceScale: 1.04 },
-  { key: "headset", name: "Headset", img: ayraHeadset, hue: 240, imagePosition: "50% 42%", faceScale: 0.98 },
-  { key: "amberProfile", name: "Amber Glow", img: ayraAmberProfile, hue: 55, imagePosition: "53% 43%", faceScale: 0.92 },
-  { key: "amberFront", name: "Amber Armor", img: ayraAmberFront, hue: 65, imagePosition: "50% 52%", faceScale: 1 },
-  { key: "amberSide", name: "Amber Side", img: ayraAmberSide, hue: 60, imagePosition: "50% 43%", faceScale: 1.08 },
-  { key: "gold", name: "Gold Headpiece", img: ayraGold, hue: 85, chroma: 0.14, imagePosition: "50% 42%", faceScale: 1.1 },
-  { key: "bob", name: "Orange Bob", img: ayraBob, hue: 45, imagePosition: "53% 42%", faceScale: 0.98 },
-  { key: "violet", name: "Violet Chrome", img: ayraViolet, hue: 300, imagePosition: "51% 43%", faceScale: 1.14 },
-  { key: "crystal", name: "Purple Crystal", img: ayraCrystal, hue: 310, imagePosition: "49% 42%", faceScale: 1.1 },
-  { key: "veil", name: "Bridal Veil", img: ayraVeil, hue: 215, imagePosition: "50% 42%", faceScale: 1.12 },
-  { key: "cinematic", name: "Cinematic", img: ayraCinematic, hue: 285, imagePosition: "50% 40%", faceScale: 0.86 },
-  { key: "zinraPrism", name: "Zinra Prism", img: ayraZinraPrism.url, hue: 205, imagePosition: "50% 42%", faceScale: 0.92 },
-  { key: "zinraVeil", name: "Zinra Veil", img: ayraZinraVeil.url, hue: 215, imagePosition: "50% 42%", faceScale: 0.92 },
-  { key: "zinraHeadset", name: "Zinra Headset", img: ayraZinraHeadset.url, hue: 195, imagePosition: "50% 42%", faceScale: 0.92 },
+  { key: "default", name: "Cyan Classic", img: ayraDefault, hue: 235, faceCenter: [0.491, 0.389], faceWidth: 0.685 },
+  { key: "cyanSide", name: "Cyan Profile", img: ayraCyanSide, hue: 230, faceCenter: [0.428, 0.454], faceWidth: 0.697 },
+  { key: "cyanJacket", name: "Cyan Jacket", img: ayraCyanJacket, hue: 225, faceCenter: [0.578, 0.422], faceWidth: 0.438 },
+  { key: "braids", name: "Cyan Braids", img: ayraBraids, hue: 220, faceCenter: [0.491, 0.403], faceWidth: 0.448 },
+  { key: "headset", name: "Headset", img: ayraHeadset, hue: 240, faceCenter: [0.391, 0.487], faceWidth: 0.585 },
+  { key: "amberProfile", name: "Amber Glow", img: ayraAmberProfile, hue: 55, faceCenter: [0.427, 0.468], faceWidth: 0.730 },
+  { key: "amberFront", name: "Amber Armor", img: ayraAmberFront, hue: 65, faceCenter: [0.391, 0.580], faceWidth: 0.685 },
+  { key: "amberSide", name: "Amber Side", img: ayraAmberSide, hue: 60, faceCenter: [0.450, 0.464], faceWidth: 0.613 },
+  { key: "gold", name: "Gold Headpiece", img: ayraGold, hue: 85, chroma: 0.14, faceCenter: [0.511, 0.472], faceWidth: 0.465 },
+  { key: "bob", name: "Orange Bob", img: ayraBob, hue: 45, faceCenter: [0.569, 0.487], faceWidth: 0.828 },
+  { key: "violet", name: "Violet Chrome", img: ayraViolet, hue: 300, faceCenter: [0.470, 0.449], faceWidth: 0.443 },
+  { key: "crystal", name: "Purple Crystal", img: ayraCrystal, hue: 310, faceCenter: [0.620, 0.430], faceWidth: 0.510 },
+  { key: "veil", name: "Bridal Veil", img: ayraVeil, hue: 215, faceCenter: [0.516, 0.549], faceWidth: 0.485 },
+  { key: "cinematic", name: "Cinematic", img: ayraCinematic, hue: 285, faceCenter: [0.576, 0.438], faceWidth: 0.578 },
+  { key: "zinraPrism", name: "Zinra Prism", img: ayraZinraPrism.url, hue: 205, faceCenter: [0.326, 0.386], faceWidth: 0.525 },
+  { key: "zinraVeil", name: "Zinra Veil", img: ayraZinraVeil.url, hue: 215, faceCenter: [0.646, 0.396], faceWidth: 0.505 },
+  { key: "zinraHeadset", name: "Zinra Headset", img: ayraZinraHeadset.url, hue: 195, faceCenter: [0.688, 0.451], faceWidth: 0.502 },
 ];
-
-const portraitStyle = (look: Look) => ({
-  objectPosition: look.imagePosition ?? "50% 42%",
-  transform: `scale(${look.faceScale ?? 1})`,
-  transformOrigin: "center center",
-});
 
 const swatch = (look: Look, kind: "primary" | "accent") => {
   const c = (look.chroma ?? 0.17) * (kind === "accent" ? 0.85 : 1);
@@ -139,7 +144,7 @@ export function AgentBanner() {
             key={look.key}
             src={look.img}
             alt={`AYRA — ${look.name}`}
-            className="ayra-featured-portrait absolute inset-0 h-full w-full object-cover object-[50%_35%]"
+            className="ayra-featured-portrait absolute left-1/2 top-1/2 h-full w-auto max-w-none object-contain"
             style={portraitStyle(look)}
           />
         </div>
@@ -178,7 +183,7 @@ export function AgentBanner() {
                 <img
                   src={l.img}
                   alt={l.name}
-                  className="h-14 w-11 object-cover transition group-hover:scale-105"
+                  className="absolute left-1/2 top-1/2 h-full w-auto max-w-none object-contain transition group-hover:brightness-110"
                   style={portraitStyle(l)}
                 />
                 <span className="absolute inset-x-0 bottom-0 truncate bg-black/60 px-1 py-0.5 text-center font-mono text-[7px] uppercase tracking-wider text-white/85">
