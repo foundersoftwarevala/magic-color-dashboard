@@ -44,7 +44,7 @@ const AUTO: Look = { key: "auto", name: "Auto", img: ayraAutoPassport, hue: 235,
 /** A shared visual face width, with per-image measured scale and alignment. */
 const portraitStyle = (look: Look) => {
   const [faceX, faceY] = look.faceCenter;
-  const scale = 0.72 / look.faceWidth;
+  const scale = 0.62 / look.faceWidth;
   return {
     transform: `translate(calc(-50% + ${(0.5 - faceX) * scale * 100}%), calc(-50% + ${(0.5 - faceY) * scale * 100}%)) scale(${scale})`,
     transformOrigin: "center center",
@@ -174,7 +174,7 @@ export function AgentBanner() {
                 onClick={() => setSelected(l.key)}
                 aria-pressed={active}
                 title={l.name}
-                className="group relative shrink-0 overflow-hidden rounded-lg transition"
+                className="group relative h-14 w-11 shrink-0 overflow-hidden rounded-lg transition"
                 style={{
                   outline: active ? `2px solid ${swatch(l, "accent")}` : "2px solid transparent",
                   outlineOffset: "1px",
